@@ -41,7 +41,7 @@ const Index = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            Live in the market – before Hemnet
+            Live in the market
           </p>
           
           <div className="flex items-center justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
@@ -85,7 +85,7 @@ const Index = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Real Estate Like Stocks</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Robinhood × TikTok × Zillow – a place where you live in the market every day
+              A place where you live in the market every day
             </p>
           </div>
 
@@ -169,11 +169,6 @@ const Index = () => {
                   </li>
                 ))}
               </ul>
-              <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20">
-                <p className="text-sm text-primary font-medium">
-                  We're inviting a select few agents to join early as potential partners, advisors, and/or key players in the company.
-                </p>
-              </div>
             </div>
           </div>
         </div>
