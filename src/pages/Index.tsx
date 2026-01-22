@@ -21,8 +21,8 @@ const Index = () => {
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <span className="text-2xl font-bold tracking-tight">BROKR</span>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm">Om oss</Button>
-            <Button variant="hero" size="sm">Kom igång</Button>
+            <Button variant="ghost" size="sm">About</Button>
+            <Button variant="hero" size="sm">Join Waitlist</Button>
           </div>
         </div>
       </nav>
@@ -33,7 +33,7 @@ const Index = () => {
         <div className="container mx-auto text-center relative">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8 animate-fade-in">
             <Zap className="w-4 h-4" />
-            Den sociala marknadsplatsen för bostäder
+            The social marketplace for real estate
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
@@ -44,12 +44,9 @@ const Index = () => {
             Live in the market – before Hemnet
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+          <div className="flex items-center justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <Button variant="hero" size="xl">
-              Registrera som mäklare
-            </Button>
-            <Button variant="heroOutline" size="xl">
-              Registrera som användare
+              Join Waitlist
             </Button>
           </div>
 
@@ -86,9 +83,9 @@ const Index = () => {
       <section className="py-20 px-6 bg-card/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Bostäder som aktier</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Real Estate Like Stocks</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Avanza × TikTok × Airbnb – en plats där man lever i marknaden varje dag
+              Robinhood × TikTok × Zillow – a place where you live in the market every day
             </p>
           </div>
 
@@ -97,22 +94,22 @@ const Index = () => {
               {
                 icon: Eye,
                 title: "Sneak Peeks",
-                description: "Se exklusiva förhandsvisningar innan de når marknaden"
+                description: "See exclusive previews before they hit the market"
               },
               {
                 icon: TrendingUp,
                 title: "Equity Tracking",
-                description: "Följ din bostads värdeutveckling i realtid"
+                description: "Track your home's value development in real-time"
               },
               {
                 icon: Trophy,
                 title: "Leaderboards",
-                description: "Upptäck toppmäklare baserat på resultat och recensioner"
+                description: "Discover top brokers based on results and reviews"
               },
               {
                 icon: ChartLine,
                 title: "Simulator",
-                description: "Simulera bud och jämför med grannskapet"
+                description: "Simulate bids and compare with the neighborhood"
               }
             ].map((feature, index) => (
               <div 
@@ -139,12 +136,12 @@ const Index = () => {
               <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
                 <Users className="w-7 h-7 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-4">För bostadsköpare</h3>
+              <h3 className="text-2xl font-bold mb-4">For Home Buyers</h3>
               <ul className="space-y-4">
                 {[
-                  "Följ värdeutvecklingen och få försprång via sneak peeks",
-                  "Jämför dig med området och simulera ditt aktuella bostadsvärde",
-                  "Daglig puls med ticker, equity och streaks"
+                  "Track value development and get ahead via sneak peeks",
+                  "Compare with the area and simulate your current home value",
+                  "Daily pulse with ticker, equity and streaks"
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <Star className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
@@ -159,12 +156,12 @@ const Index = () => {
               <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
                 <Building2 className="w-7 h-7 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-4">För mäklare</h3>
+              <h3 className="text-2xl font-bold mb-4">For Real Estate Agents</h3>
               <ul className="space-y-4">
                 {[
-                  "Bygg relationer och synlighet mellan affärerna",
-                  "Organiska leads via content, inte annonser",
-                  "Topplistor & badges för social konkurrenskraft"
+                  "Build relationships and visibility between deals",
+                  "Organic leads through content, not ads",
+                  "Leaderboards & badges for social competitiveness"
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <Star className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
@@ -174,7 +171,7 @@ const Index = () => {
               </ul>
               <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20">
                 <p className="text-sm text-primary font-medium">
-                  Vi bjuder in ett fåtal utvalda mäklare att tidigt kliva in som potentiella partners, rådgivare och/eller aktiva nyckelpersoner i bolaget.
+                  We're inviting a select few agents to join early as potential partners, advisors, and/or key players in the company.
                 </p>
               </div>
             </div>
@@ -182,25 +179,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Timeline */}
+      {/* Coming Soon */}
       <section className="py-20 px-6 bg-card/50">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">Nästa steg</h2>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
-            {[
-              { date: "Jan 2026", label: "MVP börjar byggas" },
-              { date: "Q1 2026", label: "Första version färdig" },
-              { date: "Q3 2026", label: "Full lansering" }
-            ].map((step, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center mb-4 animate-pulse-glow">
-                  <span className="text-primary font-bold">{index + 1}</span>
-                </div>
-                <span className="text-lg font-semibold">{step.date}</span>
-                <span className="text-muted-foreground text-sm">{step.label}</span>
-              </div>
-            ))}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
+            <Zap className="w-4 h-4" />
+            In Development
           </div>
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">Coming Soon</h2>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+            We're building the future of real estate. Join the waitlist to be the first to know when we launch.
+          </p>
         </div>
       </section>
 
@@ -210,18 +199,13 @@ const Index = () => {
           <div className="card-glass rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10" />
             <div className="relative">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Redo att börja?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Get Started?</h2>
               <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
-                Bli en del av framtidens bostadsmarknad
+                Be part of the future of real estate
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button variant="hero" size="xl">
-                  Registrera som mäklare
-                </Button>
-                <Button variant="heroOutline" size="xl">
-                  Registrera som användare
-                </Button>
-              </div>
+              <Button variant="hero" size="xl">
+                Join Waitlist
+              </Button>
             </div>
           </div>
         </div>
@@ -232,7 +216,7 @@ const Index = () => {
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <span className="text-xl font-bold tracking-tight">BROKR</span>
           <p className="text-muted-foreground text-sm">
-            © 2026 Brokr. Den sociala marknadsplatsen för bostäder.
+            © 2026 Brokr. The social marketplace for real estate.
           </p>
         </div>
       </footer>
