@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import mockupFeed from "@/assets/mockup-feed.png";
 import mockupProfile from "@/assets/mockup-profile.png";
@@ -9,8 +10,7 @@ import {
   Trophy, 
   Building2, 
   ChartLine,
-  Star,
-  Zap
+  Star
 } from "lucide-react";
 
 const Index = () => {
@@ -22,7 +22,9 @@ const Index = () => {
           <span className="text-2xl font-bold tracking-tight">BROKR</span>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm">About</Button>
-            <Button variant="hero" size="sm">Join Waitlist</Button>
+            <Button variant="hero" size="sm" asChild>
+              <Link to="/waitlist">Join Waitlist</Link>
+            </Button>
           </div>
         </div>
       </nav>
@@ -31,28 +33,24 @@ const Index = () => {
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
         <div className="container mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8 animate-fade-in">
-            <Zap className="w-4 h-4" />
-            The social marketplace for real estate
-          </div>
           
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
             <span className="text-gradient">Brokr</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            Live in the market
+            The social marketplace for real estate
           </p>
           
           <div className="flex items-center justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            <Button variant="hero" size="xl">
-              Join Waitlist
+            <Button variant="hero" size="xl" asChild>
+              <Link to="/waitlist">Join Waitlist</Link>
             </Button>
           </div>
 
           {/* Phone Mockups */}
-          <div className="flex items-center justify-center gap-4 md:gap-8 max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            <div className="hidden md:block w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div className="w-40 md:w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
               <img 
                 src={mockupEquity} 
                 alt="Equity tracking" 
@@ -60,14 +58,14 @@ const Index = () => {
                 style={{ animationDelay: "0.5s" }}
               />
             </div>
-            <div className="w-56 md:w-64 lg:w-72 z-10">
+            <div className="w-48 md:w-56 lg:w-72 z-10">
               <img 
                 src={mockupFeed} 
                 alt="Brokr Feed" 
                 className="w-full rounded-3xl shadow-2xl glow-effect animate-float"
               />
             </div>
-            <div className="hidden md:block w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            <div className="w-40 md:w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
               <img 
                 src={mockupProfile} 
                 alt="Broker profile" 
@@ -177,10 +175,6 @@ const Index = () => {
       {/* Coming Soon */}
       <section className="py-20 px-6 bg-card/50">
         <div className="container mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
-            <Zap className="w-4 h-4" />
-            In Development
-          </div>
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Coming Soon</h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             We're building the future of real estate. Join the waitlist to be the first to know when we launch.
@@ -198,8 +192,8 @@ const Index = () => {
               <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
                 Be part of the future of real estate
               </p>
-              <Button variant="hero" size="xl">
-                Join Waitlist
+              <Button variant="hero" size="xl" asChild>
+                <Link to="/waitlist">Join Waitlist</Link>
               </Button>
             </div>
           </div>
