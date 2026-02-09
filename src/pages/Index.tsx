@@ -22,7 +22,9 @@ const Index = () => {
           <span className="text-2xl font-bold tracking-tight">BROKR</span>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm">About</Button>
-            <Button variant="hero" size="sm">Join Waitlist</Button>
+            <Button variant="hero" size="sm" asChild>
+              <a href="mailto:william@brokrapp.se?subject=Brokr%20Waitlist&body=I'd%20like%20to%20join%20the%20Brokr%20waitlist!">Join Waitlist</a>
+            </Button>
           </div>
         </div>
       </nav>
@@ -45,8 +47,8 @@ const Index = () => {
           </p>
           
           <div className="flex items-center justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            <Button variant="hero" size="xl">
-              Join Waitlist
+            <Button variant="hero" size="xl" asChild>
+              <a href="mailto:william@brokrapp.se?subject=Brokr%20Waitlist&body=I'd%20like%20to%20join%20the%20Brokr%20waitlist!">Join Waitlist</a>
             </Button>
           </div>
 
@@ -198,8 +200,8 @@ const Index = () => {
               <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
                 Be part of the future of real estate
               </p>
-              <Button variant="hero" size="xl">
-                Join Waitlist
+              <Button variant="hero" size="xl" asChild>
+                <a href="mailto:william@brokrapp.se?subject=Brokr%20Waitlist&body=I'd%20like%20to%20join%20the%20Brokr%20waitlist!">Join Waitlist</a>
               </Button>
             </div>
           </div>
