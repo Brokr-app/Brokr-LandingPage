@@ -1,11 +1,36 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+// Replace with your Formspree form ID (from https://formspree.io/f/YOUR_FORM_ID)
+const FORMSPREE_FORM_ID = "maqdndqk";
+
 const Waitlist = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Form submission not implemented yet
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    setStatus("submitting");
+    try {
+      const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+      });
+      if (response.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -37,6 +62,7 @@ const Waitlist = () => {
                   <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
+                    name="name"
                     type="text"
                     placeholder="Your name"
                     required
@@ -46,6 +72,7 @@ const Waitlist = () => {
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     placeholder="you@example.com"
                     required
@@ -55,13 +82,29 @@ const Waitlist = () => {
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input
                     id="phone"
+                    name="phone"
                     type="tel"
                     placeholder="+46 70 123 45 67"
                   />
                 </div>
-                <Button type="submit" variant="hero" size="lg" className="w-full">
-                  Join Waitlist
-                </Button>
+                {status === "success" ? (
+                <p className="text-primary font-medium text-center py-4">
+                  Thanks! We&apos;ll be in touch.
+                </p>
+              ) : status === "error" ? (
+                <p className="text-destructive text-center py-4">
+                  Something went wrong. Please try again.
+                </p>
+              ) : null}
+              <Button
+                type="submit"
+                variant="hero"
+                size="lg"
+                className="w-full"
+                disabled={status === "submitting"}
+              >
+                {status === "submitting" ? "Sending…" : "Join Waitlist"}
+              </Button>
               </form>
             </div>
           </div>
