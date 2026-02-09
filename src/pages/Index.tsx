@@ -10,8 +10,7 @@ import {
   Trophy, 
   Building2, 
   ChartLine,
-  Star,
-  Zap
+  Star
 } from "lucide-react";
 
 const Index = () => {
@@ -34,17 +33,13 @@ const Index = () => {
       <section className="pt-32 pb-20 px-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
         <div className="container mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8 animate-fade-in">
-            <Zap className="w-4 h-4" />
-            The social marketplace for real estate
-          </div>
           
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
             <span className="text-gradient">Brokr</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            Live in the market
+            The social marketplace for real estate
           </p>
           
           <div className="flex items-center justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
@@ -180,10 +175,6 @@ const Index = () => {
       {/* Coming Soon */}
       <section className="py-20 px-6 bg-card/50">
         <div className="container mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
-            <Zap className="w-4 h-4" />
-            In Development
-          </div>
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Coming Soon</h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             We're building the future of real estate. Join the waitlist to be the first to know when we launch.
