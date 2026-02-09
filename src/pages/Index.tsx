@@ -51,8 +51,8 @@ const Index = () => {
           </div>
 
           {/* Phone Mockups */}
-          <div className="flex items-center justify-center gap-4 md:gap-8 max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            <div className="hidden md:block w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div className="w-40 md:w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
               <img 
                 src={mockupEquity} 
                 alt="Equity tracking" 
@@ -60,14 +60,14 @@ const Index = () => {
                 style={{ animationDelay: "0.5s" }}
               />
             </div>
-            <div className="w-56 md:w-64 lg:w-72 z-10">
+            <div className="w-48 md:w-56 lg:w-72 z-10">
               <img 
                 src={mockupFeed} 
                 alt="Brokr Feed" 
                 className="w-full rounded-3xl shadow-2xl glow-effect animate-float"
               />
             </div>
-            <div className="hidden md:block w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            <div className="w-40 md:w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
               <img 
                 src={mockupProfile} 
                 alt="Broker profile" 
