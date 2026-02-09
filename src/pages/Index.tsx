@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import mockupFeed from "@/assets/mockup-feed.png";
 import mockupProfile from "@/assets/mockup-profile.png";
@@ -23,7 +24,7 @@ const Index = () => {
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm">About</Button>
             <Button variant="hero" size="sm" asChild>
-              <a href="mailto:william@brokrapp.se?subject=Brokr%20Waitlist&body=I'd%20like%20to%20join%20the%20Brokr%20waitlist!">Join Waitlist</a>
+              <Link to="/waitlist">Join Waitlist</Link>
             </Button>
           </div>
         </div>
@@ -48,7 +49,7 @@ const Index = () => {
           
           <div className="flex items-center justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <Button variant="hero" size="xl" asChild>
-              <a href="mailto:william@brokrapp.se?subject=Brokr%20Waitlist&body=I'd%20like%20to%20join%20the%20Brokr%20waitlist!">Join Waitlist</a>
+              <Link to="/waitlist">Join Waitlist</Link>
             </Button>
           </div>
 
@@ -201,7 +202,7 @@ const Index = () => {
                 Be part of the future of real estate
               </p>
               <Button variant="hero" size="xl" asChild>
-                <a href="mailto:william@brokrapp.se?subject=Brokr%20Waitlist&body=I'd%20like%20to%20join%20the%20Brokr%20waitlist!">Join Waitlist</a>
+                <Link to="/waitlist">Join Waitlist</Link>
               </Button>
             </div>
           </div>
