@@ -4,7 +4,7 @@ on:
     branches: [main]
   schedule:
     - cron: '0 2 * * 1'  # Mondays at 2 AM UTC
-  skip-if-match: 'is:issue is:open in:title "[scan-finding]"'
+  skip-if-match: 'is:open in:title "[scan-finding]" OR is:open in:title "[scan-fix]"'
   steps:
     - name: check_commit_cooldown
       id: check_commit_cooldown
@@ -47,17 +47,23 @@ on:
 permissions:
   contents: read
   issues: read
+  pull-requests: read
 
 tools:
   github:
-    toolsets: [repos, issues, search]
+    toolsets: [repos, issues, pull_requests, search]
 
 engine: copilot
 
 safe-outputs:
+  create-pull-request:
+    max: 3
+    draft: true
+    title-prefix: "[scan-fix]"
   create-issue:
     max: 6
     close-older-issues: true
+  threat-detection: false
 ---
 
 # Code Quality Scanner
@@ -75,6 +81,12 @@ reviewed by the team and either fixed or intentionally dismissed.
 
 If a closed issue says "Missing null check in UserController" and you find the same
 class of issue there, skip it.
+
+Also fetch prior pull requests whose title contains `[scan-fix]`, including open,
+merged, and closed PRs. Build a list of their titles, summaries, and changed areas.
+**Do not open a PR or issue for a finding that closely matches an existing or prior
+`[scan-fix]` PR**, even if the code location has shifted. If a similar open
+`[scan-fix]` PR already exists, stop without creating duplicate output.
 
 ## Step 2 — Scan the Codebase
 
@@ -109,12 +121,69 @@ preferences, minor formatting, or low-risk patterns.
 - Dead code: unreachable branches, unused exported functions, zombie feature flags
 - God objects or services doing many unrelated things (violates SRP)
 
-## Step 3 — Prioritise and Report (maximum 5 findings)
+## Step 3 — Prioritise Findings (maximum 5)
 
 If you find more than 5 issues, rank by severity and report only the top 5 most
 critical ones. Quality over quantity.
 
-For **each finding**, create one issue with the following format:
+For each finding, decide whether it is straightforward enough to fix directly.
+
+Create a pull request when all of these are true:
+
+- The fix is small, localised, and low-risk
+- The expected behaviour is clear from the surrounding code and tests
+- The change does not require product decisions, new feature design, large refactors,
+  migrations, external services, cloud consoles such as AWS, credentials, or access
+  to repositories outside this one
+- You can update or add focused tests, or run the existing relevant tests to verify
+  the change
+
+For straightforward fixes, implement the change and create draft pull requests.
+You may create up to 3 PRs in one run, but only when each PR is independently
+reviewable and valuable.
+
+**Title**: `[scan-fix] <Short, specific fix description>`
+
+**Body**:
+
+```
+## Summary
+[What was fixed and why]
+
+## Location
+[Files changed]
+
+## Verification
+[Tests/checks run and their result. If a relevant check could not be run, say why.]
+
+## Severity
+**High** / **Medium**
+```
+
+Use this grouping policy:
+
+- Create separate PRs for independent fixes that touch different root causes,
+  unrelated files, or unrelated behaviours
+- Combine fixes in one PR only when they address the same root cause, touch the
+  same small area, or must be changed together to keep tests passing
+- Prefer fewer PRs when several tiny findings are mechanically identical and the
+  combined diff is still easy to review
+- Stop at 3 PRs per run. If more straightforward fixes remain, prioritise the
+  highest-severity or lowest-risk ones and create issues for any important
+  remaining findings that should not be delayed
+
+Each PR must be focused on one finding or a tightly related set of findings. Do not
+bundle unrelated fixes. Do not modify generated or vendored files unless that is the
+normal source of truth in this repository.
+
+## Step 4 — Report Non-Trivial Findings
+
+Create an issue instead of a PR when the fix is not straightforward, including when
+it requires a larger refactor, an entirely new feature, product/team input, external
+tools or credentials, cloud access such as AWS, another repository, or risky
+behavioural changes.
+
+For **each non-trivial finding**, create one issue with the following format:
 
 **Title**: `[scan-finding] <Short, specific description>`
 
@@ -139,9 +208,10 @@ File: `path/to/file.ts` — Line ~42
 **High** / **Medium**
 ```
 
-## Step 4 — If No Issues Found
+## Step 5 — If No Issues Found
 
-If the scan reveals no findings (after deduplication), create exactly ONE issue:
+If the scan reveals no findings (after deduplication), and you did not create a
+pull request or finding issue, create exactly ONE issue:
 
 **Title**: `[scan-clean] ✓ No issues found`
 
