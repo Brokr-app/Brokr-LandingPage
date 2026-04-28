@@ -58,6 +58,7 @@ safe-outputs:
   create-issue:
     max: 6
     close-older-issues: true
+  threat-detection: false
 ---
 
 # Code Quality Scanner
