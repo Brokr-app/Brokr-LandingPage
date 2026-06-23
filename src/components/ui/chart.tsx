@@ -59,7 +59,16 @@ const ChartContainer = React.forwardRef<
 ChartContainer.displayName = "Chart";
 
 const SAFE_KEY_PATTERN = /^[a-zA-Z0-9_-]+$/;
-const SAFE_COLOR_PATTERN = /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})|rgb\(|rgba\(|hsl\(|hsla\(|var\(--[a-zA-Z0-9_-]+\))/;
+
+// Each alternative is fully anchored (^...$) and validates the entire value,
+// not just a leading token, to prevent suffix injection into the raw <style> block.
+const HEX_COLOR = "#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})";
+const CSS_NUMBER = "\\d{1,3}%?";
+const ALPHA_VALUE = "(?:0|1|0?\\.\\d+)";
+const RGB_COLOR = `rgba?\\(\\s*${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?\\)`;
+const HSL_COLOR = `hsla?\\(\\s*\\d{1,3}\\s*,\\s*\\d{1,3}%\\s*,\\s*\\d{1,3}%\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?\\)`;
+const CSS_VAR_REF = "var\\(--[a-zA-Z0-9_-]+\\)";
+const SAFE_COLOR_PATTERN = new RegExp(`^(?:${HEX_COLOR}|${RGB_COLOR}|${HSL_COLOR}|${CSS_VAR_REF})$`);
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
