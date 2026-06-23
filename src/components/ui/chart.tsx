@@ -29,6 +29,8 @@ function useChart() {
   return context;
 }
 
+const SAFE_KEY_PATTERN = /^[a-zA-Z0-9_-]+$/;
+
 const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
@@ -37,7 +39,10 @@ const ChartContainer = React.forwardRef<
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId();
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
+  // Reject ids with characters that could break out of the `[data-chart=...]`
+  // selector in the raw <style> block ChartStyle renders below.
+  const safeId = id && SAFE_KEY_PATTERN.test(id) ? id : uniqueId.replace(/:/g, "");
+  const chartId = `chart-${safeId}`;
 
   return (
     <ChartContext.Provider value={{ config }}>
@@ -58,12 +63,14 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
-const SAFE_KEY_PATTERN = /^[a-zA-Z0-9_-]+$/;
-
 // Each alternative is fully anchored (^...$) and validates the entire value,
 // not just a leading token, to prevent suffix injection into the raw <style> block.
-const HEX_COLOR = "#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})";
+// 4-/8-digit forms carry an alpha channel, e.g. #646cffaa in src/App.css.
+const HEX_COLOR = "#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})";
 const CSS_NUMBER = "\\d{1,3}%?";
+// Hue/saturation/lightness may carry decimals, e.g. the --destructive token
+// `0 84.2% 60.2%` in src/index.css.
+const CSS_NUMBER_DECIMAL = "\\d{1,3}(?:\\.\\d+)?";
 const ALPHA_VALUE = "(?:0|1|0?\\.\\d+)";
 const CSS_VAR_REF = "var\\(--[a-zA-Z0-9_-]+\\)";
 // rgb()/hsl() accept plain numeric components (legacy comma syntax or the
@@ -74,8 +81,8 @@ const CSS_VAR_REF = "var\\(--[a-zA-Z0-9_-]+\\)";
 const RGB_LEGACY = `${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
 const RGB_MODERN = `${CSS_NUMBER}\\s+${CSS_NUMBER}\\s+${CSS_NUMBER}\\s*(?:\\/\\s*${ALPHA_VALUE}\\s*)?`;
 const RGB_NUMERIC = `(?:${RGB_LEGACY}|${RGB_MODERN})`;
-const HSL_LEGACY = `\\d{1,3}\\s*,\\s*\\d{1,3}%\\s*,\\s*\\d{1,3}%\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
-const HSL_MODERN = `\\d{1,3}\\s+\\d{1,3}%\\s+\\d{1,3}%\\s*(?:\\/\\s*${ALPHA_VALUE}\\s*)?`;
+const HSL_LEGACY = `${CSS_NUMBER_DECIMAL}\\s*,\\s*${CSS_NUMBER_DECIMAL}%\\s*,\\s*${CSS_NUMBER_DECIMAL}%\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
+const HSL_MODERN = `${CSS_NUMBER_DECIMAL}\\s+${CSS_NUMBER_DECIMAL}%\\s+${CSS_NUMBER_DECIMAL}%\\s*(?:\\/\\s*${ALPHA_VALUE}\\s*)?`;
 const HSL_NUMERIC = `(?:${HSL_LEGACY}|${HSL_MODERN})`;
 const RGB_COLOR = `rgba?\\(\\s*(?:${RGB_NUMERIC}|${CSS_VAR_REF})\\s*\\)`;
 const HSL_COLOR = `hsla?\\(\\s*(?:${HSL_NUMERIC}|${CSS_VAR_REF})\\s*\\)`;
