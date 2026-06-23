@@ -66,11 +66,17 @@ const HEX_COLOR = "#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})";
 const CSS_NUMBER = "\\d{1,3}%?";
 const ALPHA_VALUE = "(?:0|1|0?\\.\\d+)";
 const CSS_VAR_REF = "var\\(--[a-zA-Z0-9_-]+\\)";
-// rgb()/hsl() accept either plain numeric components or a single wrapped
-// var(--name) reference, e.g. hsl(var(--chart-1)) — the standard
-// shadcn/Tailwind chart-token convention.
-const RGB_NUMERIC = `${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
-const HSL_NUMERIC = `\\d{1,3}\\s*,\\s*\\d{1,3}%\\s*,\\s*\\d{1,3}%\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
+// rgb()/hsl() accept plain numeric components (legacy comma syntax or the
+// CSS Color 4 space/slash syntax used by this app's own tokens, e.g.
+// hsl(199 89% 48% / 0.3) in src/index.css) or a single wrapped var(--name)
+// reference, e.g. hsl(var(--chart-1)) — the standard shadcn/Tailwind
+// chart-token convention.
+const RGB_LEGACY = `${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
+const RGB_MODERN = `${CSS_NUMBER}\\s+${CSS_NUMBER}\\s+${CSS_NUMBER}\\s*(?:\\/\\s*${ALPHA_VALUE}\\s*)?`;
+const RGB_NUMERIC = `(?:${RGB_LEGACY}|${RGB_MODERN})`;
+const HSL_LEGACY = `\\d{1,3}\\s*,\\s*\\d{1,3}%\\s*,\\s*\\d{1,3}%\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
+const HSL_MODERN = `\\d{1,3}\\s+\\d{1,3}%\\s+\\d{1,3}%\\s*(?:\\/\\s*${ALPHA_VALUE}\\s*)?`;
+const HSL_NUMERIC = `(?:${HSL_LEGACY}|${HSL_MODERN})`;
 const RGB_COLOR = `rgba?\\(\\s*(?:${RGB_NUMERIC}|${CSS_VAR_REF})\\s*\\)`;
 const HSL_COLOR = `hsla?\\(\\s*(?:${HSL_NUMERIC}|${CSS_VAR_REF})\\s*\\)`;
 const SAFE_COLOR_PATTERN = new RegExp(`^(?:${HEX_COLOR}|${RGB_COLOR}|${HSL_COLOR}|${CSS_VAR_REF})$`);
