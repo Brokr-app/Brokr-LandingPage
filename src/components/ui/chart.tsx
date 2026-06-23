@@ -65,9 +65,14 @@ const SAFE_KEY_PATTERN = /^[a-zA-Z0-9_-]+$/;
 const HEX_COLOR = "#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})";
 const CSS_NUMBER = "\\d{1,3}%?";
 const ALPHA_VALUE = "(?:0|1|0?\\.\\d+)";
-const RGB_COLOR = `rgba?\\(\\s*${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?\\)`;
-const HSL_COLOR = `hsla?\\(\\s*\\d{1,3}\\s*,\\s*\\d{1,3}%\\s*,\\s*\\d{1,3}%\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?\\)`;
 const CSS_VAR_REF = "var\\(--[a-zA-Z0-9_-]+\\)";
+// rgb()/hsl() accept either plain numeric components or a single wrapped
+// var(--name) reference, e.g. hsl(var(--chart-1)) — the standard
+// shadcn/Tailwind chart-token convention.
+const RGB_NUMERIC = `${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*,\\s*${CSS_NUMBER}\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
+const HSL_NUMERIC = `\\d{1,3}\\s*,\\s*\\d{1,3}%\\s*,\\s*\\d{1,3}%\\s*(?:,\\s*${ALPHA_VALUE}\\s*)?`;
+const RGB_COLOR = `rgba?\\(\\s*(?:${RGB_NUMERIC}|${CSS_VAR_REF})\\s*\\)`;
+const HSL_COLOR = `hsla?\\(\\s*(?:${HSL_NUMERIC}|${CSS_VAR_REF})\\s*\\)`;
 const SAFE_COLOR_PATTERN = new RegExp(`^(?:${HEX_COLOR}|${RGB_COLOR}|${HSL_COLOR}|${CSS_VAR_REF})$`);
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
