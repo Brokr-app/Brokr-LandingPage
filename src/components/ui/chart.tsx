@@ -58,13 +58,38 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
-// Strict allowlists to prevent CSS/style injection when interpolating
-// chart config keys and color values into the generated <style> content.
+// Strict allowlist to prevent CSS/style injection when interpolating chart
+// config keys into the generated <style> content.
 const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
-// Each alternative is fully anchored (no dangling prefix match) so a value can't
-// "start safe" and then smuggle extra declarations/selectors past the allowlist.
-const SAFE_COLOR =
-  /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\((?:[0-9a-zA-Z.,%\s/+-]|var\(--[a-zA-Z0-9_-]+\))*\)|var\(--[a-zA-Z0-9_-]+\))$/;
+
+// CSS color syntax is open-ended (named colors, hex, rgb/hsl/oklch/lab/...,
+// var() with arbitrarily nested fallbacks), so allowlisting every valid form
+// is a moving target. Instead, block the characters that can actually break
+// out of the single `--color-${key}: ${color};` declaration (`;` ends it
+// early, `{`/`}` can open/close a rule, `<`/`>`/`\` can break out of the
+// surrounding <style> tag) and require balanced parens so a value can't
+// prematurely close an enclosing var()/rgb()/etc. Anything else is passed
+// through unmodified, the same as the pre-fix behavior for trusted color
+// values.
+const UNSAFE_COLOR_CHARS = /[;{}<>\\]/;
+
+function isSafeColor(color: string): boolean {
+  if (UNSAFE_COLOR_CHARS.test(color)) {
+    return false;
+  }
+  let depth = 0;
+  for (const ch of color) {
+    if (ch === "(") {
+      depth++;
+    } else if (ch === ")") {
+      depth--;
+      if (depth < 0) {
+        return false;
+      }
+    }
+  }
+  return depth === 0;
+}
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
@@ -93,7 +118,7 @@ ${colorConfig
     }
 
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    return color && SAFE_COLOR.test(color) ? `  --color-${key}: ${color};` : null;
+    return color && isSafeColor(color) ? `  --color-${key}: ${color};` : null;
   })
   .join("\n")}
 }
