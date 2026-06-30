@@ -61,7 +61,10 @@ ChartContainer.displayName = "Chart";
 // Strict allowlists to prevent CSS/style injection when interpolating
 // chart config keys and color values into the generated <style> content.
 const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
-const SAFE_COLOR = /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})|rgb\(|hsl\(|var\(--)/;
+// Each alternative is fully anchored (no dangling prefix match) so a value can't
+// "start safe" and then smuggle extra declarations/selectors past the allowlist.
+const SAFE_COLOR =
+  /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\([0-9a-zA-Z.,%\s/+-]*\)|var\(--[a-zA-Z0-9_-]+\))$/;
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
