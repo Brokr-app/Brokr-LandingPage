@@ -64,7 +64,7 @@ const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
 // Each alternative is fully anchored (no dangling prefix match) so a value can't
 // "start safe" and then smuggle extra declarations/selectors past the allowlist.
 const SAFE_COLOR =
-  /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\([0-9a-zA-Z.,%\s/+-]*\)|var\(--[a-zA-Z0-9_-]+\))$/;
+  /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\((?:[0-9a-zA-Z.,%\s/+-]|var\(--[a-zA-Z0-9_-]+\))*\)|var\(--[a-zA-Z0-9_-]+\))$/;
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
