@@ -61,15 +61,28 @@ ChartContainer.displayName = "Chart";
 // Strict allowlists to prevent CSS/markup injection when interpolating
 // config-derived keys and color values into the generated <style> tag below.
 // Only entries that match these patterns are emitted; anything else is
-// silently dropped rather than interpolated. SAFE_COLOR permits any standard
-// CSS color syntax (hex, rgb()/hsl() with legacy comma or modern space-slash
-// syntax, nested var(--token) references, named colors) by restricting the
-// character set rather than enumerating every function shape — this still
-// blocks the characters needed to break out of the CSS value (<, >, ", ',
-// ;, {, }, backslash, newline) while not rejecting valid design tokens like
-// `hsl(var(--primary))` or `hsl(199 89% 48%)`.
+// silently dropped rather than interpolated. SAFE_COLOR_CHARS permits any
+// standard CSS color syntax (hex, rgb()/hsl() with legacy comma or modern
+// space-slash syntax, nested var(--token) references, named colors) by
+// restricting the character set rather than enumerating every function
+// shape — this blocks the characters needed to break out of the CSS value
+// (<, >, ", ', ;, {, }, backslash, newline) while not rejecting valid design
+// tokens like `hsl(var(--primary))` or `hsl(199 89% 48%)`. That character
+// allowlist alone still permits `url(...)`, which SVG `fill`/`stroke` (how
+// Recharts consumes these values) accepts as a paint reference — so also
+// reject any function call whose name isn't one of the color functions we
+// actually support.
 const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
-const SAFE_COLOR = /^[a-zA-Z0-9#().,%\-\s/]+$/;
+const SAFE_COLOR_CHARS = /^[a-zA-Z0-9#().,%\-\s/]+$/;
+const ALLOWED_COLOR_FUNCTIONS = /^(rgba?|hsla?|var)$/i;
+
+function isSafeColor(value: string): boolean {
+  if (!SAFE_COLOR_CHARS.test(value)) {
+    return false;
+  }
+  const calledFunctions = value.match(/[a-zA-Z-]+(?=\()/g) ?? [];
+  return calledFunctions.every((name) => ALLOWED_COLOR_FUNCTIONS.test(name));
+}
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
@@ -88,7 +101,7 @@ ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    if (!color || !SAFE_KEY.test(key) || !SAFE_COLOR.test(color)) {
+    if (!color || !SAFE_KEY.test(key) || !isSafeColor(color)) {
       return null;
     }
     return `  --color-${key}: ${color};`;
