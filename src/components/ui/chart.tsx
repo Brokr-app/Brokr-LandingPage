@@ -74,7 +74,8 @@ ChartContainer.displayName = "Chart";
 // actually support.
 const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
 const SAFE_COLOR_CHARS = /^[a-zA-Z0-9#().,%\-\s/]+$/;
-const ALLOWED_COLOR_FUNCTIONS = /^(rgba?|hsla?|var)$/i;
+const ALLOWED_COLOR_FUNCTIONS =
+  /^(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix|var)$/i;
 
 function isSafeColor(value: string): boolean {
   if (!SAFE_COLOR_CHARS.test(value)) {
@@ -87,7 +88,10 @@ function isSafeColor(value: string): boolean {
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
 
-  if (!colorConfig.length) {
+  // `id` is interpolated directly into the generated selector below
+  // ([data-chart=${id}]); reuse the same identifier allowlist as config
+  // keys so a selector-breaking id (e.g. `] { ... }`) can't escape it.
+  if (!colorConfig.length || !SAFE_KEY.test(id)) {
     return null;
   }
 
