@@ -61,10 +61,15 @@ ChartContainer.displayName = "Chart";
 // Strict allowlists to prevent CSS/markup injection when interpolating
 // config-derived keys and color values into the generated <style> tag below.
 // Only entries that match these patterns are emitted; anything else is
-// silently dropped rather than interpolated.
+// silently dropped rather than interpolated. SAFE_COLOR permits any standard
+// CSS color syntax (hex, rgb()/hsl() with legacy comma or modern space-slash
+// syntax, nested var(--token) references, named colors) by restricting the
+// character set rather than enumerating every function shape — this still
+// blocks the characters needed to break out of the CSS value (<, >, ", ',
+// ;, {, }, backslash, newline) while not rejecting valid design tokens like
+// `hsl(var(--primary))` or `hsl(199 89% 48%)`.
 const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
-const SAFE_COLOR =
-  /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgb\(\s*[\d.]+%?\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*(,\s*[\d.]+%?\s*)?\)|rgba\(\s*[\d.]+%?\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*\)|hsl\(\s*[\d.]+\s*,\s*[\d.]+%\s*,\s*[\d.]+%\s*\)|hsla\(\s*[\d.]+\s*,\s*[\d.]+%\s*,\s*[\d.]+%\s*,\s*[\d.]+%?\s*\)|var\(--[a-zA-Z0-9_-]+\))$/;
+const SAFE_COLOR = /^[a-zA-Z0-9#().,%\-\s/]+$/;
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
