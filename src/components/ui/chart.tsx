@@ -58,6 +58,14 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
+// Strict allowlists to prevent CSS/markup injection when interpolating
+// config-derived keys and color values into the generated <style> tag below.
+// Only entries that match these patterns are emitted; anything else is
+// silently dropped rather than interpolated.
+const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
+const SAFE_COLOR =
+  /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgb\(\s*[\d.]+%?\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*(,\s*[\d.]+%?\s*)?\)|rgba\(\s*[\d.]+%?\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*\)|hsl\(\s*[\d.]+\s*,\s*[\d.]+%\s*,\s*[\d.]+%\s*\)|hsla\(\s*[\d.]+\s*,\s*[\d.]+%\s*,\s*[\d.]+%\s*,\s*[\d.]+%?\s*\)|var\(--[a-zA-Z0-9_-]+\))$/;
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
 
@@ -75,8 +83,12 @@ ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
+    if (!color || !SAFE_KEY.test(key) || !SAFE_COLOR.test(color)) {
+      return null;
+    }
+    return `  --color-${key}: ${color};`;
   })
+  .filter(Boolean)
   .join("\n")}
 }
 `,
