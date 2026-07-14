@@ -62,7 +62,7 @@ ChartContainer.displayName = "Chart";
 // user-provided config keys and color values into a raw <style> tag.
 const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
 const SAFE_COLOR =
-  /^(#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\([0-9a-zA-Z%.,/\s+-]+\)|var\(--[a-zA-Z0-9_-]+\)|[a-zA-Z]+)$/;
+  /^(#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\([0-9a-zA-Z%.,/\s()+-]+\)|var\(--[a-zA-Z0-9_-]+\)|[a-zA-Z]+)$/;
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
