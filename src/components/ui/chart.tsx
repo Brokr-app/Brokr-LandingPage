@@ -58,6 +58,11 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
+// Strict allowlists to prevent CSS/markup injection when interpolating
+// user-provided config keys and color values into a raw <style> tag.
+const SAFE_KEY = /^[a-zA-Z0-9_-]+$/;
+const SAFE_COLOR = /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})|rgb\(|hsl\(|var\(--)/;
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
 
@@ -74,9 +79,18 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
+    if (!SAFE_KEY.test(key)) {
+      return null;
+    }
+
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
+    if (!color || !SAFE_COLOR.test(color)) {
+      return null;
+    }
+
+    return `  --color-${key}: ${color};`;
   })
+  .filter(Boolean)
   .join("\n")}
 }
 `,
