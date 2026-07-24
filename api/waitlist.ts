@@ -21,6 +21,9 @@ type WaitlistPayload = {
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const rateLimitWindowMs = 15 * 60 * 1000;
+const rateLimitMaxRequests = 5;
+const rateLimits = new Map<string, { count: number; resetAt: number }>();
 
 const readEnv = (name: string) => process.env[name]?.trim() ?? "";
 
@@ -50,6 +53,34 @@ const getForwardedFor = (value: string | string[] | undefined) => {
   }
 
   return value?.split(",")[0]?.trim() ?? "";
+};
+
+const escapeHtml = (value: string) =>
+  value.replace(/[&<>"]/g, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+    };
+
+    return entities[character];
+  });
+
+const consumeRateLimit = (key: string, now = Date.now()) => {
+  const current = rateLimits.get(key);
+
+  if (!current || current.resetAt <= now) {
+    rateLimits.set(key, { count: 1, resetAt: now + rateLimitWindowMs });
+    return { allowed: true, retryAfter: 0 };
+  }
+
+  if (current.count >= rateLimitMaxRequests) {
+    return { allowed: false, retryAfter: Math.ceil((current.resetAt - now) / 1000) };
+  }
+
+  current.count += 1;
+  return { allowed: true, retryAfter: 0 };
 };
 
 export default async function handler(req: WaitlistRequest, res: WaitlistResponse) {
@@ -84,6 +115,19 @@ export default async function handler(req: WaitlistRequest, res: WaitlistRespons
     return res.status(500).json({ ok: false, message: "Email transport not configured" });
   }
 
+  const ip = getForwardedFor(req.headers?.["x-forwarded-for"]) || req.socket?.remoteAddress || "unknown";
+  const ipRateLimit = consumeRateLimit(`ip:${ip}`);
+  const emailRateLimit = consumeRateLimit(`email:${email}`);
+  const rateLimit = !ipRateLimit.allowed ? ipRateLimit : emailRateLimit;
+
+  if (!rateLimit.allowed) {
+    res.setHeader("Retry-After", String(rateLimit.retryAfter));
+    return res.status(429).json({ ok: false, message: "Too many requests" });
+  }
+
+  const submittedAt = new Date().toISOString();
+  const origin = typeof req.headers?.origin === "string" ? req.headers.origin : "unknown";
+
   const transporter = nodemailer.createTransport({
     host,
     port,
@@ -104,17 +148,17 @@ export default async function handler(req: WaitlistRequest, res: WaitlistRespons
         "New Brokr waitlist signup",
         "",
         `Email: ${email}`,
-        `Submitted at: ${new Date().toISOString()}`,
-        `Origin: ${typeof req.headers?.origin === "string" ? req.headers.origin : "unknown"}`,
-        `IP: ${getForwardedFor(req.headers?.["x-forwarded-for"]) || req.socket?.remoteAddress || "unknown"}`,
+        `Submitted at: ${submittedAt}`,
+        `Origin: ${origin}`,
+        `IP: ${ip}`,
       ].join("\n"),
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1f1711;">
           <h2 style="margin-bottom: 16px;">New Brokr waitlist signup</h2>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Submitted at:</strong> ${new Date().toISOString()}</p>
-          <p><strong>Origin:</strong> ${typeof req.headers?.origin === "string" ? req.headers.origin : "unknown"}</p>
-          <p><strong>IP:</strong> ${getForwardedFor(req.headers?.["x-forwarded-for"]) || req.socket?.remoteAddress || "unknown"}</p>
+          <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+          <p><strong>Submitted at:</strong> ${escapeHtml(submittedAt)}</p>
+          <p><strong>Origin:</strong> ${escapeHtml(origin)}</p>
+          <p><strong>IP:</strong> ${escapeHtml(ip)}</p>
         </div>
       `,
     });

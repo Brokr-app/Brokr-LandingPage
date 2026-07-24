@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   Bookmark,
@@ -95,11 +95,57 @@ const initialFeedState = feedCards.reduce<Record<string, FeedState>>((acc, card)
 
 const formatCount = (count: number) => {
   if (count >= 1000) {
-    const rounded = count >= 10000 ? Math.round(count / 1000) : Math.round((count / 100) * 10) / 10;
+    const rounded = count >= 10000 ? Math.round(count / 1000) : Math.round((count / 1000) * 10) / 10;
     return `${String(rounded).replace(".", ",")}k`;
   }
 
   return String(count);
+};
+
+const FeedVideo = ({ src, label }: { src: string; label: string }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+
+    if (!("IntersectionObserver" in window)) {
+      return undefined;
+    }
+
+    const observer = new window.IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.35 },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!("IntersectionObserver" in window)) return;
+
+    if (!video || !isVisible) {
+      video?.pause();
+      return;
+    }
+
+    void video.play();
+  }, [isVisible]);
+
+  return (
+    <video
+      aria-label={label}
+      className="feed-video"
+      loop
+      muted
+      playsInline
+      preload="none"
+      ref={videoRef}
+      src={isVisible ? src : undefined}
+    />
+  );
 };
 
 const Index = () => {
@@ -212,6 +258,18 @@ const Index = () => {
     });
   };
 
+  const copyCardLink = async (card: FeedCard) => {
+    const url = new URL(window.location.href);
+    url.hash = card.id;
+
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      showToast("Länk kopierad", "share");
+    } catch {
+      showToast("Kunde inte kopiera länken", "share");
+    }
+  };
+
   return (
     <main className="landing-shell" id="top">
       <section className="hero-section">
@@ -264,9 +322,14 @@ const Index = () => {
                 </button>
               </form>
 
-              <div className={`capture-feedback ${submitState === "success" ? "visible" : ""}`}>
-                <CheckCircle2 size={16} strokeWidth={2.1} />
-                Tack! Din inbjudan är på väg.
+              <div
+                aria-live="polite"
+                className={`capture-feedback ${submitState === "success" || submitState === "error" ? `visible ${submitState}` : ""}`}
+              >
+                {submitState === "success" ? <CheckCircle2 size={16} strokeWidth={2.1} /> : null}
+                {submitState === "success"
+                  ? "Tack! Din inbjudan är på väg."
+                  : "Något gick fel. Försök igen om en stund."}
               </div>
             </div>
           </div>
@@ -294,14 +357,7 @@ const Index = () => {
                         }}
                       >
                         {card.mediaType === "video" ? (
-                          <video
-                            autoPlay
-                            className="feed-video"
-                            loop
-                            muted
-                            playsInline
-                            src={card.mediaSrc}
-                          />
+                          <FeedVideo label={card.mediaAlt} src={card.mediaSrc} />
                         ) : (
                           <img alt={card.mediaAlt} className="feed-image" src={card.mediaSrc} />
                         )}
@@ -316,6 +372,7 @@ const Index = () => {
 
                       <div className="feed-rail">
                         <button
+                          aria-label={`${state.liked ? "Sluta gilla" : "Gilla"} ${card.title}`}
                           className={`rail-action ${state.liked ? "active" : ""}`}
                           onClick={() => toggleLike(card.id)}
                           type="button"
@@ -327,6 +384,7 @@ const Index = () => {
                         </button>
 
                         <button
+                          aria-label={`${state.saved ? "Ta bort sparning av" : "Spara"} ${card.title}`}
                           className={`rail-action ${state.saved ? "active save" : ""}`}
                           onClick={() => toggleSave(card.id)}
                           type="button"
@@ -338,8 +396,9 @@ const Index = () => {
                         </button>
 
                         <button
+                          aria-label={`Kopiera länk till ${card.title}`}
                           className="rail-action"
-                          onClick={() => showToast("Länk kopierad", "share")}
+                          onClick={() => void copyCardLink(card)}
                           type="button"
                         >
                           <span className="rail-icon">
