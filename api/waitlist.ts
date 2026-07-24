@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-type WaitlistRequest = {
+export type WaitlistRequest = {
   method?: string;
   body?: unknown;
   headers?: Record<string, string | string[] | undefined>;
@@ -9,7 +9,7 @@ type WaitlistRequest = {
   };
 };
 
-type WaitlistResponse = {
+export type WaitlistResponse = {
   setHeader: (name: string, value: string | string[]) => void;
   status: (code: number) => WaitlistResponse;
   json: (body: unknown) => void;
@@ -91,7 +91,7 @@ export default async function handler(req: WaitlistRequest, res: WaitlistRespons
   }
 
   const body = parseBody(req.body);
-  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  const email = typeof body.email === "string" ? body.email.trim() : "";
   const website = typeof body.website === "string" ? body.website.trim() : "";
 
   if (website) {
@@ -117,7 +117,8 @@ export default async function handler(req: WaitlistRequest, res: WaitlistRespons
 
   const ip = getForwardedFor(req.headers?.["x-forwarded-for"]) || req.socket?.remoteAddress || "unknown";
   const ipRateLimit = consumeRateLimit(`ip:${ip}`);
-  const emailRateLimit = consumeRateLimit(`email:${email}`);
+  const normalizedEmail = email.toLowerCase();
+  const emailRateLimit = consumeRateLimit(`email:${normalizedEmail}`);
   const rateLimit = !ipRateLimit.allowed ? ipRateLimit : emailRateLimit;
 
   if (!rateLimit.allowed) {
