@@ -28,6 +28,9 @@ const rateLimits = new Map<string, { count: number; resetAt: number }>();
 
 const readEnv = (name: string) => process.env[name]?.trim() ?? "";
 
+const isWaitlistPayload = (value: unknown): value is WaitlistPayload =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
+
 const parseBody = (body: unknown): WaitlistPayload => {
   if (!body) {
     return {};
@@ -35,14 +38,15 @@ const parseBody = (body: unknown): WaitlistPayload => {
 
   if (typeof body === "string") {
     try {
-      return JSON.parse(body) as WaitlistPayload;
+      const parsed: unknown = JSON.parse(body);
+      return isWaitlistPayload(parsed) ? parsed : {};
     } catch {
       return {};
     }
   }
 
-  if (typeof body === "object") {
-    return body as WaitlistPayload;
+  if (isWaitlistPayload(body)) {
+    return body;
   }
 
   return {};
