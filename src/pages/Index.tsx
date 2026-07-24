@@ -289,8 +289,7 @@ const Index = () => {
 
             <p className="hero-lead">
               Brokr är ett socialt flöde för bostadsmarknaden. Se objekt innan de når de
-              stora sajterna, följ Stockholms toppmäklare, och förstå priserna på riktigt,
-              allt på ett ställe.
+              stora sajterna, följ Stockholms toppmäklare, och förstå priserna på riktigt — allt på ett ställe.
             </p>
 
             <div className={`capture-card ${submitState === "success" ? "done" : ""}`} id="access">
