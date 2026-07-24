@@ -1,215 +1,451 @@
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import mockupFeed from "@/assets/mockup-feed.png";
-import mockupProfile from "@/assets/mockup-profile.png";
-import mockupEquity from "@/assets/mockup-equity.png";
-import { 
-  TrendingUp, 
-  Users, 
-  Eye, 
-  Trophy, 
-  Building2, 
-  ChartLine,
-  Star
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ArrowRight,
+  Bookmark,
+  CheckCircle2,
+  ChevronUp,
+  Heart,
+  Link2,
+  Send,
 } from "lucide-react";
 
-const Index = () => {
+type SubmitState = "idle" | "submitting" | "success" | "error";
+
+type FeedCard = {
+  id: string;
+  mediaType: "image" | "video";
+  mediaSrc: string;
+  mediaAlt: string;
+  tag: string;
+  live?: boolean;
+  agentInitials: string;
+  agentName: string;
+  agentArea: string;
+  title: string;
+  price: string;
+  facts: string;
+  likes: number;
+  saves: number;
+};
+
+type FeedState = {
+  liked: boolean;
+  saved: boolean;
+};
+
+type ToastState = {
+  visible: boolean;
+  message: string;
+  mode: "save" | "share";
+};
+
+const feedCards: FeedCard[] = [
+  {
+    id: "grand",
+    mediaType: "image",
+    mediaSrc: "/landing-assets/hero-grand.png",
+    mediaAlt: "Paradvåning vid vattnet",
+    tag: "BUDGIVNING PÅGÅR",
+    live: true,
+    agentInitials: "OH",
+    agentName: "Oscar Hedlund",
+    agentArea: "Mäklare · Vasastan",
+    title: "Ljus paradvåning vid Vasaparken",
+    price: "18,9 Mkr",
+    facts: "112 m² · 4 rok",
+    likes: 3120,
+    saves: 940,
+  },
+  {
+    id: "ostermalm",
+    mediaType: "image",
+    mediaSrc: "/landing-assets/hero-ostermalm.png",
+    mediaAlt: "Sekelskiftesvåning med utsikt",
+    tag: "FÖRHANDSMARKNAD · 4 D KVAR",
+    agentInitials: "EV",
+    agentName: "Elin Vahlund",
+    agentArea: "Mäklare · Östermalm",
+    title: "Sekelskiftesvåning med sjöutsikt",
+    price: "55,0 Mkr",
+    facts: "184 m² · 6 rok",
+    likes: 5320,
+    saves: 1840,
+  },
+  {
+    id: "skargarden",
+    mediaType: "video",
+    mediaSrc: "/landing-assets/hero-skargarden.mp4",
+    mediaAlt: "Sjötomt med brygga",
+    tag: "GLIMT",
+    agentInitials: "ML",
+    agentName: "Maja Lindqvist",
+    agentArea: "Mäklare · Skärgården",
+    title: "Sjötomt med egen brygga",
+    price: "14,5 Mkr",
+    facts: "140 m² · 5 rok",
+    likes: 8740,
+    saves: 2610,
+  },
+];
+
+const initialFeedState = feedCards.reduce<Record<string, FeedState>>((acc, card) => {
+  acc[card.id] = { liked: false, saved: false };
+  return acc;
+}, {});
+
+const formatCount = (count: number) => {
+  if (count >= 1000) {
+    const rounded = count >= 10000 ? Math.round(count / 1000) : Math.round((count / 1000) * 10) / 10;
+    return `${String(rounded).replace(".", ",")}k`;
+  }
+
+  return String(count);
+};
+
+const FeedVideo = ({ src, label }: { src: string; label: string }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+
+    if (!("IntersectionObserver" in window)) {
+      return undefined;
+    }
+
+    const observer = new window.IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.35 },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!("IntersectionObserver" in window)) return;
+
+    if (!video || !isVisible) {
+      video?.pause();
+      return;
+    }
+
+    void video.play();
+  }, [isVisible]);
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-2xl font-bold tracking-tight">BROKR</span>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm">About</Button>
-            <Button variant="hero" size="sm" asChild>
-              <Link to="/waitlist">Join Waitlist</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
+    <video
+      aria-label={label}
+      className="feed-video"
+      loop
+      muted
+      playsInline
+      preload="none"
+      ref={videoRef}
+      src={isVisible ? src : undefined}
+    />
+  );
+};
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
-        <div className="container mx-auto text-center relative">
-          
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <span className="text-gradient">Brokr</span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            The social marketplace for real estate
-          </p>
-          
-          <div className="flex items-center justify-center mb-16 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            <Button variant="hero" size="xl" asChild>
-              <Link to="/waitlist">Join Waitlist</Link>
-            </Button>
-          </div>
+const Index = () => {
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [feedState, setFeedState] = useState<Record<string, FeedState>>(initialFeedState);
+  const [toast, setToast] = useState<ToastState>({
+    visible: false,
+    message: "",
+    mode: "save",
+  });
+  const [scrollHintHidden, setScrollHintHidden] = useState(false);
 
-          {/* Phone Mockups */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            <div className="w-40 md:w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
-              <img 
-                src={mockupEquity} 
-                alt="Equity tracking" 
-                className="w-full rounded-3xl shadow-2xl animate-float"
-                style={{ animationDelay: "0.5s" }}
-              />
-            </div>
-            <div className="w-48 md:w-56 lg:w-72 z-10">
-              <img 
-                src={mockupFeed} 
-                alt="Brokr Feed" 
-                className="w-full rounded-3xl shadow-2xl glow-effect animate-float"
-              />
-            </div>
-            <div className="w-40 md:w-48 lg:w-56 opacity-60 hover:opacity-100 transition-opacity duration-300">
-              <img 
-                src={mockupProfile} 
-                alt="Broker profile" 
-                className="w-full rounded-3xl shadow-2xl animate-float"
-                style={{ animationDelay: "1s" }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+  const feedStats = useMemo(
+    () =>
+      feedCards.reduce<
+        Record<string, { likes: string; saves: string }>
+      >((acc, card) => {
+        const state = feedState[card.id];
 
-      {/* Value Proposition */}
-      <section className="py-20 px-6 bg-card/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Real Estate Like Stocks</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              A place where you live in the market every day
+        acc[card.id] = {
+          likes: formatCount(card.likes + (state?.liked ? 1 : 0)),
+          saves: formatCount(card.saves + (state?.saved ? 1 : 0)),
+        };
+
+        return acc;
+      }, {}),
+    [feedState],
+  );
+
+  useEffect(() => {
+    document.title = "Brokr";
+  }, []);
+
+  useEffect(() => {
+    if (!toast.visible) {
+      return undefined;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setToast((current) => ({ ...current, visible: false }));
+    }, 1700);
+
+    return () => window.clearTimeout(timeout);
+  }, [toast.visible]);
+
+  const showToast = (message: string, mode: "save" | "share") => {
+    setToast({ visible: true, message, mode });
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const email = String(formData.get("email") ?? "").trim();
+    const website = String(formData.get("website") ?? "");
+
+    if (!email) {
+      setSubmitState("error");
+      return;
+    }
+
+    setSubmitState("submitting");
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, website }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Waitlist submission failed");
+      }
+
+      setSubmitState("success");
+      form.reset();
+    } catch {
+      setSubmitState("error");
+    }
+  };
+
+  const toggleLike = (cardId: string) => {
+    setFeedState((current) => ({
+      ...current,
+      [cardId]: {
+        ...current[cardId],
+        liked: !current[cardId].liked,
+      },
+    }));
+  };
+
+  const toggleSave = (cardId: string) => {
+    setFeedState((current) => {
+      const nextSaved = !current[cardId].saved;
+
+      if (nextSaved) {
+        showToast("Sparad i din lista", "save");
+      }
+
+      return {
+        ...current,
+        [cardId]: {
+          ...current[cardId],
+          saved: nextSaved,
+        },
+      };
+    });
+  };
+
+  const copyCardLink = async (card: FeedCard) => {
+    const url = new URL(window.location.href);
+    url.hash = card.id;
+
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      showToast("Länk kopierad", "share");
+    } catch {
+      showToast("Kunde inte kopiera länken", "share");
+    }
+  };
+
+  return (
+    <main className="landing-shell" id="top">
+      <section className="hero-section">
+        <div className="hero-wrap">
+          <div className="hero-copy">
+            <a className="brand-mark" href="#top">
+              Brokr<span className="brand-dot">.</span>
+            </a>
+
+            <div className="hero-title-wrap">
+              <h1 className="hero-title">
+                Se hem.
+                <br />
+                <em>Innan de blir objekt.</em>
+              </h1>
+            </div>
+
+            <p className="hero-lead">
+              Brokr är ett socialt flöde för bostadsmarknaden. Se objekt innan de når de
+              stora sajterna, följ Stockholms toppmäklare, och förstå priserna på riktigt,
+              allt på ett ställe.
             </p>
-          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Eye,
-                title: "Sneak Peeks",
-                description: "See exclusive previews before they hit the market"
-              },
-              {
-                icon: TrendingUp,
-                title: "Equity Tracking",
-                description: "Track your home's value development in real-time"
-              },
-              {
-                icon: Trophy,
-                title: "Leaderboards",
-                description: "Discover top brokers based on results and reviews"
-              },
-              {
-                icon: ChartLine,
-                title: "Simulator",
-                description: "Simulate bids and compare with the neighborhood"
-              }
-            ].map((feature, index) => (
-              <div 
-                key={index}
-                className="card-glass rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 group"
+            <div className={`capture-card ${submitState === "success" ? "done" : ""}`} id="access">
+              <form className="capture-form" onSubmit={handleSubmit}>
+                <input
+                  aria-label="E-post"
+                  autoComplete="email"
+                  className="capture-input"
+                  name="email"
+                  placeholder="din@email.se"
+                  required
+                  type="email"
+                />
+                <input
+                  aria-hidden="true"
+                  autoComplete="off"
+                  className="honeypot-field"
+                  name="website"
+                  tabIndex={-1}
+                  type="text"
+                />
+                <button
+                  className="capture-button"
+                  disabled={submitState === "submitting" || submitState === "success"}
+                  type="submit"
+                >
+                  {submitState === "submitting" ? "Skickar…" : "Få tidig tillgång"}
+                  <ArrowRight size={16} strokeWidth={2.1} />
+                </button>
+              </form>
+
+              <div
+                aria-live="polite"
+                className={`capture-feedback ${submitState === "success" || submitState === "error" ? `visible ${submitState}` : ""}`}
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                  <feature.icon className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground text-sm">{feature.description}</p>
+                {submitState === "success" ? <CheckCircle2 size={16} strokeWidth={2.1} /> : null}
+                {submitState === "success"
+                  ? "Tack! Du står nu på väntelistan."
+                  : "Något gick fel. Försök igen om en stund."}
               </div>
-            ))}
+            </div>
+          </div>
+
+          <div className="phone-stage">
+            <div className="phone-shell">
+              <div className="phone-notch" />
+
+              <div
+                className="phone-feed"
+                onScroll={() => setScrollHintHidden(true)}
+              >
+                {feedCards.map((card) => {
+                  const state = feedState[card.id];
+                  const stats = feedStats[card.id];
+
+                  return (
+                    <article className="feed-card" key={card.id}>
+                      <div
+                        className="feed-media"
+                        onDoubleClick={() => {
+                          if (!state.liked) {
+                            toggleLike(card.id);
+                          }
+                        }}
+                      >
+                        {card.mediaType === "video" ? (
+                          <FeedVideo label={card.mediaAlt} src={card.mediaSrc} />
+                        ) : (
+                          <img alt={card.mediaAlt} className="feed-image" src={card.mediaSrc} />
+                        )}
+                      </div>
+
+                      <div className="feed-scrim" />
+
+                      <div className={`feed-tag ${card.live ? "live" : ""}`}>
+                        {card.live ? <span className="live-dot" /> : null}
+                        {card.tag}
+                      </div>
+
+                      <div className="feed-rail">
+                        <button
+                          aria-label={`${state.liked ? "Sluta gilla" : "Gilla"} ${card.title}`}
+                          className={`rail-action ${state.liked ? "active" : ""}`}
+                          onClick={() => toggleLike(card.id)}
+                          type="button"
+                        >
+                          <span className="rail-icon">
+                            <Heart fill={state.liked ? "currentColor" : "none"} size={21} strokeWidth={2} />
+                          </span>
+                          <small>{stats.likes}</small>
+                        </button>
+
+                        <button
+                          aria-label={`${state.saved ? "Ta bort sparning av" : "Spara"} ${card.title}`}
+                          className={`rail-action ${state.saved ? "active save" : ""}`}
+                          onClick={() => toggleSave(card.id)}
+                          type="button"
+                        >
+                          <span className="rail-icon">
+                            <Bookmark fill={state.saved ? "currentColor" : "none"} size={20} strokeWidth={2} />
+                          </span>
+                          <small>{stats.saves}</small>
+                        </button>
+
+                        <button
+                          aria-label={`Kopiera länk till ${card.title}`}
+                          className="rail-action"
+                          onClick={() => void copyCardLink(card)}
+                          type="button"
+                        >
+                          <span className="rail-icon">
+                            <Send size={20} strokeWidth={2} />
+                          </span>
+                          <small>Dela</small>
+                        </button>
+                      </div>
+
+                      <div className="feed-info">
+                        <div className="feed-agent">
+                          <span className="agent-badge" style={{ background: `var(--avatar-${card.agentInitials.toLowerCase()})` }}>
+                            {card.agentInitials}
+                          </span>
+
+                          <div className="agent-meta">
+                            <div className="agent-name">{card.agentName}</div>
+                            <div className="agent-area">{card.agentArea}</div>
+                          </div>
+                        </div>
+
+                        <div className="feed-title">{card.title}</div>
+
+                        <div className="feed-facts">
+                          <span className="feed-price">{card.price}</span>
+                          <span className="feed-detail">{card.facts}</span>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <div className={`scroll-hint ${scrollHintHidden ? "hidden" : ""}`}>
+                <ChevronUp size={15} strokeWidth={2.2} />
+                Svep
+              </div>
+
+              <div className={`floating-toast ${toast.visible ? "visible" : ""}`}>
+                {toast.mode === "share" ? <Link2 size={16} strokeWidth={2.1} /> : <Bookmark size={16} strokeWidth={2.1} />}
+                {toast.message}
+              </div>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* For Users & Brokers */}
-      <section className="py-20 px-6">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* For Users */}
-            <div className="card-glass rounded-3xl p-8 lg:p-10">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                <Users className="w-7 h-7 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">For Home Buyers</h3>
-              <ul className="space-y-4">
-                {[
-                  "Track value development and get ahead via sneak peeks",
-                  "Compare with the area and simulate your current home value",
-                  "Daily pulse with ticker, equity and streaks"
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <Star className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span className="text-muted-foreground">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* For Brokers */}
-            <div className="card-glass rounded-3xl p-8 lg:p-10 border-primary/30">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                <Building2 className="w-7 h-7 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">For Real Estate Agents</h3>
-              <ul className="space-y-4">
-                {[
-                  "Build relationships and visibility between deals",
-                  "Organic leads through content, not ads",
-                  "Leaderboards & badges for social competitiveness"
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <Star className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span className="text-muted-foreground">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Coming Soon */}
-      <section className="py-20 px-6 bg-card/50">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">Coming Soon</h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            We're building the future of real estate. Join the waitlist to be the first to know when we launch.
-          </p>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 px-6">
-        <div className="container mx-auto">
-          <div className="card-glass rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10" />
-            <div className="relative">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Get Started?</h2>
-              <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
-                Be part of the future of real estate
-              </p>
-              <Button variant="hero" size="xl" asChild>
-                <Link to="/waitlist">Join Waitlist</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-10 px-6 border-t border-border">
-        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-xl font-bold tracking-tight">BROKR</span>
-          <p className="text-muted-foreground text-sm">
-            © 2026 Brokr. The social marketplace for real estate.
-          </p>
-        </div>
-      </footer>
-    </div>
+    </main>
   );
 };
 

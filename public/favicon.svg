@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <rect width="256" height="256" rx="56" fill="#FBF5EC"/>
+  <text
+    x="8"
+    y="168"
+    fill="#24170F"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="118"
+    font-style="italic"
+    font-weight="500"
+    letter-spacing="-8"
+    textLength="228"
+    lengthAdjust="spacingAndGlyphs"
+  >Brokr</text>
+  <circle cx="238" cy="179" r="12" fill="#B77A45"/>
+</svg>
