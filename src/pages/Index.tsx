@@ -328,7 +328,7 @@ const Index = () => {
               >
                 {submitState === "success" ? <CheckCircle2 size={16} strokeWidth={2.1} /> : null}
                 {submitState === "success"
-                  ? "Tack! Din inbjudan är på väg."
+                  ? "Tack! Du står nu på väntelistan."
                   : "Något gick fel. Försök igen om en stund."}
               </div>
             </div>

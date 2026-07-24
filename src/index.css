@@ -213,7 +213,7 @@ button {
   align-items: center;
   gap: 8px;
   margin-top: 12px;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
   font-size: 0.93rem;
 }
 
@@ -656,7 +656,7 @@ button {
 
   .phone-shell {
     width: min(100%, 300px);
-    height: min(68vh, 580px);
+    height: clamp(520px, 68vh, 580px);
     aspect-ratio: auto;
     padding: 12px;
     border-radius: 36px;
