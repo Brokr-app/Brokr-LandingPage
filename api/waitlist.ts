@@ -23,6 +23,7 @@ type WaitlistPayload = {
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const rateLimitWindowMs = 15 * 60 * 1000;
 const rateLimitMaxRequests = 5;
+const rateLimitMaxEntries = 10_000;
 const rateLimits = new Map<string, { count: number; resetAt: number }>();
 
 const readEnv = (name: string) => process.env[name]?.trim() ?? "";
@@ -68,9 +69,25 @@ const escapeHtml = (value: string) =>
   });
 
 const consumeRateLimit = (key: string, now = Date.now()) => {
+  for (const [storedKey, limit] of rateLimits) {
+    if (limit.resetAt > now) {
+      break;
+    }
+
+    rateLimits.delete(storedKey);
+  }
+
   const current = rateLimits.get(key);
 
-  if (!current || current.resetAt <= now) {
+  if (!current) {
+    if (rateLimits.size >= rateLimitMaxEntries) {
+      const oldestKey = rateLimits.keys().next().value;
+
+      if (oldestKey) {
+        rateLimits.delete(oldestKey);
+      }
+    }
+
     rateLimits.set(key, { count: 1, resetAt: now + rateLimitWindowMs });
     return { allowed: true, retryAfter: 0 };
   }
@@ -117,12 +134,17 @@ export default async function handler(req: WaitlistRequest, res: WaitlistRespons
 
   const ip = getForwardedFor(req.headers?.["x-forwarded-for"]) || req.socket?.remoteAddress || "unknown";
   const ipRateLimit = consumeRateLimit(`ip:${ip}`);
+
+  if (!ipRateLimit.allowed) {
+    res.setHeader("Retry-After", String(ipRateLimit.retryAfter));
+    return res.status(429).json({ ok: false, message: "Too many requests" });
+  }
+
   const normalizedEmail = email.toLowerCase();
   const emailRateLimit = consumeRateLimit(`email:${normalizedEmail}`);
-  const rateLimit = !ipRateLimit.allowed ? ipRateLimit : emailRateLimit;
 
-  if (!rateLimit.allowed) {
-    res.setHeader("Retry-After", String(rateLimit.retryAfter));
+  if (!emailRateLimit.allowed) {
+    res.setHeader("Retry-After", String(emailRateLimit.retryAfter));
     return res.status(429).json({ ok: false, message: "Too many requests" });
   }
 
