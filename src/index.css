@@ -239,6 +239,18 @@ button {
   color: #8b2820;
 }
 
+.capture-hint {
+  margin: 10px 0 0;
+  color: var(--ink-faint);
+  font-size: 0.82rem;
+}
+
+.capture-hint a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .capture-card.done .capture-form {
   opacity: 0.84;
 }

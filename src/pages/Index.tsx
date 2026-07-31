@@ -338,6 +338,10 @@ const Index = () => {
                   ? "Tack! Du står nu på väntelistan."
                   : "Något gick fel. Försök igen om en stund."}
               </div>
+
+              <p className="capture-hint">
+                Frågor? Maila oss på <a href="mailto:info@brokrapp.se">info@brokrapp.se</a>
+              </p>
             </div>
           </div>
 
