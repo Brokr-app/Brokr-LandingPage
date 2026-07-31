@@ -208,15 +208,23 @@ const Index = () => {
       return;
     }
 
+    if (website) {
+      setSubmitState("success");
+      form.reset();
+      return;
+    }
+
     setSubmitState("submitting");
 
     try {
-      const response = await fetch("/api/waitlist", {
+      const formId = import.meta.env.VITE_FORMSPREE_FORM_ID;
+      const response = await fetch(`https://formspree.io/f/${formId}`, {
         method: "POST",
         headers: {
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, website }),
+        body: JSON.stringify({ email }),
       });
 
       if (!response.ok) {
