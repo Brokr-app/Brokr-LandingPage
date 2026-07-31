@@ -11,7 +11,7 @@ describe("landing page", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole("link", { name: /Brokr/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Brokr/ })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Se hem/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Få tidig tillgång/i })).toBeInTheDocument();
   });
