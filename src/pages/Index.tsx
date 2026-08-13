@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   Bookmark,
@@ -16,7 +16,6 @@ type FeedCard = {
   mediaType: "image" | "video";
   mediaSrc: string;
   mediaAlt: string;
-  tag: string;
   live?: boolean;
   agentInitials: string;
   agentName: string;
@@ -24,8 +23,6 @@ type FeedCard = {
   title: string;
   price: string;
   facts: string;
-  likes: number;
-  saves: number;
 };
 
 type FeedState = {
@@ -45,46 +42,36 @@ const feedCards: FeedCard[] = [
     mediaType: "image",
     mediaSrc: "/landing-assets/hero-grand.png",
     mediaAlt: "Paradvåning vid vattnet",
-    tag: "BUDGIVNING PÅGÅR",
-    live: true,
-    agentInitials: "OH",
-    agentName: "Oscar Hedlund",
-    agentArea: "Mäklare · Vasastan",
+    agentInitials: "BM",
+    agentName: "Brokr mäklare",
+    agentArea: "Konceptprofil · Vasastan",
     title: "Ljus paradvåning vid Vasaparken",
     price: "18,9 Mkr",
     facts: "112 m² · 4 rok",
-    likes: 3120,
-    saves: 940,
   },
   {
     id: "ostermalm",
     mediaType: "image",
     mediaSrc: "/landing-assets/hero-ostermalm.png",
     mediaAlt: "Sekelskiftesvåning med utsikt",
-    tag: "FÖRHANDSMARKNAD · 4 D KVAR",
-    agentInitials: "EV",
-    agentName: "Elin Vahlund",
-    agentArea: "Mäklare · Östermalm",
+    agentInitials: "BM",
+    agentName: "Brokr mäklare",
+    agentArea: "Konceptprofil · Östermalm",
     title: "Sekelskiftesvåning med sjöutsikt",
     price: "55,0 Mkr",
     facts: "184 m² · 6 rok",
-    likes: 5320,
-    saves: 1840,
   },
   {
     id: "skargarden",
     mediaType: "video",
     mediaSrc: "/landing-assets/hero-skargarden.mp4",
     mediaAlt: "Sjötomt med brygga",
-    tag: "GLIMT",
-    agentInitials: "ML",
-    agentName: "Maja Lindqvist",
-    agentArea: "Mäklare · Skärgården",
+    agentInitials: "BM",
+    agentName: "Brokr mäklare",
+    agentArea: "Konceptprofil · Skärgården",
     title: "Sjötomt med egen brygga",
     price: "14,5 Mkr",
     facts: "140 m² · 5 rok",
-    likes: 8740,
-    saves: 2610,
   },
 ];
 
@@ -92,15 +79,6 @@ const initialFeedState = feedCards.reduce<Record<string, FeedState>>((acc, card)
   acc[card.id] = { liked: false, saved: false };
   return acc;
 }, {});
-
-const formatCount = (count: number) => {
-  if (count >= 1000) {
-    const rounded = count >= 10000 ? Math.round(count / 1000) : Math.round((count / 1000) * 10) / 10;
-    return `${String(rounded).replace(".", ",")}k`;
-  }
-
-  return String(count);
-};
 
 const FeedVideo = ({ src, label }: { src: string; label: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -158,23 +136,6 @@ const Index = () => {
   });
   const [scrollHintHidden, setScrollHintHidden] = useState(false);
 
-  const feedStats = useMemo(
-    () =>
-      feedCards.reduce<
-        Record<string, { likes: string; saves: string }>
-      >((acc, card) => {
-        const state = feedState[card.id];
-
-        acc[card.id] = {
-          likes: formatCount(card.likes + (state?.liked ? 1 : 0)),
-          saves: formatCount(card.saves + (state?.saved ? 1 : 0)),
-        };
-
-        return acc;
-      }, {}),
-    [feedState],
-  );
-
   useEffect(() => {
     document.title = "Brokr";
   }, []);
@@ -217,14 +178,20 @@ const Index = () => {
     setSubmitState("submitting");
 
     try {
-      const formId = import.meta.env.VITE_FORMSPREE_FORM_ID;
+      const formId = import.meta.env.VITE_FORMSPREE_FORM_ID?.trim();
+      if (!formId) throw new Error("Waitlist is not configured");
       const response = await fetch(`https://formspree.io/f/${formId}`, {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email,
+          privacyAccepted: true,
+          privacyVersion: "2026-08-11",
+          acceptedAt: new Date().toISOString(),
+        }),
       });
 
       if (!response.ok) {
@@ -297,7 +264,7 @@ const Index = () => {
 
             <p className="hero-lead">
               Brokr är ett socialt flöde för bostadsmarknaden. Se objekt innan de når de
-              stora sajterna, följ Stockholms toppmäklare, och förstå priserna på riktigt — allt på ett ställe.
+              stora sajterna, följ verifierade profiler och utforska bostadsmarknaden — allt på ett ställe.
             </p>
 
             <div className={`capture-card ${submitState === "success" ? "done" : ""}`} id="access">
@@ -329,6 +296,14 @@ const Index = () => {
                 </button>
               </form>
 
+              <label className="capture-consent">
+                <input name="privacyConsent" required type="checkbox" />
+                <span>
+                  Jag godkänner att min e-post behandlas för väntelistan enligt{" "}
+                  <a href="/integritet">integritetspolicyn</a>.
+                </span>
+              </label>
+
               <div
                 aria-live="polite"
                 className={`capture-feedback ${submitState === "success" || submitState === "error" ? `visible ${submitState}` : ""}`}
@@ -338,10 +313,6 @@ const Index = () => {
                   ? "Tack! Du står nu på väntelistan."
                   : "Något gick fel. Försök igen om en stund."}
               </div>
-
-              <p className="capture-hint">
-                Frågor? Maila oss på <a href="mailto:info@brokrapp.se">info@brokrapp.se</a>
-              </p>
             </div>
           </div>
 
@@ -355,7 +326,6 @@ const Index = () => {
               >
                 {feedCards.map((card) => {
                   const state = feedState[card.id];
-                  const stats = feedStats[card.id];
 
                   return (
                     <article className="feed-card" key={card.id}>
@@ -378,7 +348,6 @@ const Index = () => {
 
                       <div className={`feed-tag ${card.live ? "live" : ""}`}>
                         {card.live ? <span className="live-dot" /> : null}
-                        {card.tag}
                       </div>
 
                       <div className="feed-rail">
@@ -391,7 +360,7 @@ const Index = () => {
                           <span className="rail-icon">
                             <Heart fill={state.liked ? "currentColor" : "none"} size={21} strokeWidth={2} />
                           </span>
-                          <small>{stats.likes}</small>
+                          <small>{state.liked ? "Gillad" : "Gilla"}</small>
                         </button>
 
                         <button
@@ -403,7 +372,7 @@ const Index = () => {
                           <span className="rail-icon">
                             <Bookmark fill={state.saved ? "currentColor" : "none"} size={20} strokeWidth={2} />
                           </span>
-                          <small>{stats.saves}</small>
+                          <small>{state.saved ? "Sparad" : "Spara"}</small>
                         </button>
 
                         <button
@@ -447,7 +416,6 @@ const Index = () => {
                 <ChevronUp size={15} strokeWidth={2.2} />
                 Svep
               </div>
-
               <div className={`floating-toast ${toast.visible ? "visible" : ""}`}>
                 {toast.mode === "share" ? <Link2 size={16} strokeWidth={2.1} /> : <Bookmark size={16} strokeWidth={2.1} />}
                 {toast.message}
@@ -456,6 +424,14 @@ const Index = () => {
           </div>
         </div>
       </section>
+      <footer className="landing-footer">
+        <span>© 2026 Brokr — En del av <a href="https://www.vantir.se/ventures" target="_blank" rel="noopener noreferrer">Vantir Ventures</a></span>
+        <nav aria-label="Sidfot">
+          <a href="/integritet">Integritet</a>
+          <a href="/villkor">Villkor</a>
+          <a href="/support">Kontakt och support</a>
+        </nav>
+      </footer>
     </main>
   );
 };
