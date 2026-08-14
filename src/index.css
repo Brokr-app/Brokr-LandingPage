@@ -846,7 +846,7 @@ button {
 
   .phone-shell {
     width: min(100%, 288px);
-    height: clamp(500px, 64dvh, 600px);
+    height: clamp(580px, 76dvh, 600px);
     aspect-ratio: auto;
     padding: 12px;
     border-radius: 36px;
