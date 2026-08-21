@@ -1,10 +1,11 @@
 import LegalLayout, { ControllerIdentity } from "@/components/LegalLayout";
+import { PRIVACY_POLICY_UPDATED } from "@/lib/policyVersion";
 
 const Privacy = () => (
   <LegalLayout
     title="Integritetspolicy"
     lead="Här beskriver vi vilka personuppgifter Brokr behandlar, varför de behövs och vilka val du har."
-    updated="21 augusti 2026"
+    updated={PRIVACY_POLICY_UPDATED}
   >
 
     <section>

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { hasCompleteLegalIdentity, legalIdentity } from "@/lib/legalIdentity";
+import { LEGAL_PAGES_UPDATED } from "@/lib/policyVersion";
 
 /**
  * The date this page was last substantively revised.
@@ -10,7 +11,7 @@ import { hasCompleteLegalIdentity, legalIdentity } from "@/lib/legalIdentity";
  * the others — and a reader cannot tell which version of a policy they agreed
  * to if the date does not track the text.
  */
-const DEFAULT_UPDATED = "11 augusti 2026";
+const DEFAULT_UPDATED = LEGAL_PAGES_UPDATED;
 
 export default function LegalLayout({
   title,
