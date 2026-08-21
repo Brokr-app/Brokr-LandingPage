@@ -86,7 +86,7 @@ const Privacy = () => (
         <li>Få uppgifter raderade, exempelvis när de inte längre behövs för ändamålet.</li>
         <li>Begära att behandlingen begränsas, till exempel medan en invändning eller en rättelse utreds, om behandlingen är olaglig men du hellre vill begränsa den än få uppgifterna raderade, eller om vi inte längre behöver uppgifterna men du behöver dem för att kunna fastställa, göra gällande eller försvara ett rättsligt anspråk.</li>
         <li>Invända mot behandling som sker med stöd av berättigat intresse, inklusive den profilering som beskrivs ovan.</li>
-        <li>Få ut de uppgifter du själv lämnat i ett maskinläsbart format och överföra dem till en annan leverantör (dataportabilitet).</li>
+        <li>Få ut de uppgifter du själv lämnat i ett maskinläsbart format och överföra dem till en annan leverantör (dataportabilitet). Rätten gäller uppgifter som behandlas automatiserat med stöd av samtycke eller avtal — den omfattar alltså inte behandling som vilar på berättigat intresse eller rättslig förpliktelse.</li>
         <li>När som helst återkalla ett samtycke du lämnat, exempelvis för plats, push eller väntelista. Återkallelsen påverkar inte behandling som redan skett.</li>
       </ul>
       <p>
