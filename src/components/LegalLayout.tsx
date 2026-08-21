@@ -2,13 +2,25 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { hasCompleteLegalIdentity, legalIdentity } from "@/lib/legalIdentity";
 
+/**
+ * The date this page was last substantively revised.
+ *
+ * Per page, not shared. It used to be one hard-coded date in this layout, so
+ * revising one policy either left it stale on that page or silently redated
+ * the others — and a reader cannot tell which version of a policy they agreed
+ * to if the date does not track the text.
+ */
+const DEFAULT_UPDATED = "11 augusti 2026";
+
 export default function LegalLayout({
   title,
   lead,
+  updated = DEFAULT_UPDATED,
   children,
 }: {
   title: string;
   lead: string;
+  updated?: string;
   children: ReactNode;
 }) {
   return (
@@ -24,7 +36,7 @@ export default function LegalLayout({
         </nav>
       </header>
       <article className="legal-article">
-        <p className="legal-updated">Senast uppdaterad 11 augusti 2026</p>
+        <p className="legal-updated">Senast uppdaterad {updated}</p>
         <h1>{title}</h1>
         <p className="legal-lead">{lead}</p>
         {children}
