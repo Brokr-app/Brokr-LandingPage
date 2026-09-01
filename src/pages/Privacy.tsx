@@ -16,6 +16,13 @@ const Privacy = () => (
         och uppfylla rättsliga skyldigheter. Grunden är i huvudsak avtal, berättigat
         intresse, samtycke för valfri plats, push och väntelista samt rättslig förpliktelse. Följande uppgifter behandlas:
       </p>
+      <p>
+        För att visa relevant innehåll analyserar vi hur du interagerar med tjänsten
+        (t.ex. vilka bostadsobjekt du visar, sparar eller markerar intresse för) och tar
+        fram en individuellt anpassad rekommendationsprofil av bostadsobjekt. Denna
+        profilering sker med berättigat intresse som grund och påverkar endast i vilken
+        ordning innehåll visas för dig i appen.
+      </p>
       <ul className="list-disc pl-6 pt-4 pb-4">
         <li>Konto och profil: namn, användarnamn, e-post, födelsedatum, valfritt telefonnummer, roll, profilbild och verifieringsstatus.</li>
         <li>Användargenererat innehåll: profiler, inlägg, bostadsobjekt, kommentarer, glimtar, hemuppgifter, meddelanden, bilder, videor och bildtexter.</li>
@@ -102,6 +109,32 @@ const Privacy = () => (
           Integritetsskyddsmyndigheten (IMY)
         </a>
         .
+      </p>
+    </section>
+
+    <section>
+      <h2>Dina rättigheter</h2>
+      <p>
+        Enligt dataskyddsförordningen (GDPR) har du rätt att:
+      </p>
+      <ul className="list-disc pl-6 pt-4 pb-4">
+        <li>få tillgång till de personuppgifter vi behandlar om dig,</li>
+        <li>få felaktiga uppgifter rättade,</li>
+        <li>få dina uppgifter raderade, inom ramen för vad lag och dokumenterad
+          säkerhets- eller tvisteskyldighet tillåter,</li>
+        <li>begära att behandlingen begränsas i vissa situationer,</li>
+        <li>invända mot behandling som stödjer sig på berättigat intresse,
+          inklusive den profilering som beskrivs ovan,</li>
+        <li>få ut de uppgifter du själv lämnat till oss i ett strukturerat,
+          allmänt använt och maskinläsbart format (dataportabilitet), och</li>
+        <li>när behandlingen bygger på samtycke, när som helst återkalla det
+          samtycket.</li>
+      </ul>
+      <p>
+        Kontakta <a href="mailto:support@brokrapp.se">support@brokrapp.se</a> för
+        att utöva någon av dessa rättigheter. Du har också rätt att lämna in ett
+        klagomål till Integritetsskyddsmyndigheten (IMY), <a href="https://www.imy.se" target="_blank" rel="noreferrer">imy.se</a>, om
+        du anser att vi behandlar dina personuppgifter i strid med gällande rätt.
       </p>
     </section>
   </LegalLayout>
