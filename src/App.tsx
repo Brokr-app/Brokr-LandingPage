@@ -8,6 +8,7 @@ import Kontakt from "./pages/Kontakt";
 
 const App = () => (
   <BrowserRouter>
+    {/* Keep in sync with scripts/emit-route-pages.mjs */}
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/waitlist" element={<Waitlist />} />
