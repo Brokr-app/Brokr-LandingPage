@@ -4,6 +4,7 @@ const Privacy = () => (
   <LegalLayout
     title="Integritetspolicy"
     lead="Här beskriver vi vilka personuppgifter Brokr behandlar, varför de behövs och vilka val du har."
+    updated="17 oktober 2026"
   >
 
     <section>
