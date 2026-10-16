@@ -48,6 +48,34 @@ describe("landing page", () => {
     expect(screen.getByText(/inget verkligt bud/i)).toBeInTheDocument();
   });
 
+  it("describes the marketplace rules for buyers and sellers", () => {
+    render(
+      <MemoryRouter>
+        <Terms />
+      </MemoryRouter>,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "Köp och försäljning mellan användare" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Brokr hanterar inga betalningar/i)).toBeInTheDocument();
+    expect(screen.getByText(/ansvarar du själv för att kontrollera att en vara är äkta/i)).toBeInTheDocument();
+    expect(screen.getByText(/bedra eller försöka bedra andra användare/i)).toBeInTheDocument();
+    expect(screen.getByText(/stänga av konton tillfälligt eller\s+permanent/i)).toBeInTheDocument();
+    expect(screen.getByText(/Senast uppdaterad 16 oktober 2026/)).toBeInTheDocument();
+  });
+
+  it("discloses how product tags and seller contact are handled", () => {
+    render(
+      <MemoryRouter>
+        <Privacy />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText(/Produkttaggar visas offentligt/i)).toBeInTheDocument();
+    expect(screen.getByText(/inga kort- eller betaluppgifter/i)).toBeInTheDocument();
+  });
+
   it("provides an accessible support route", () => {
     render(
       <MemoryRouter>
