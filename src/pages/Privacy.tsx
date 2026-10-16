@@ -55,7 +55,15 @@ const Privacy = () => (
           påverkar dig i betydande grad (artikel 22 GDPR). Svaren är automatiskt genererade
           och kan innehålla fel – kontrollera viktiga uppgifter med mäklaren.
         </li>
-        <li>Skriv inte känsliga personuppgifter, t.ex. om hälsa eller ekonomi, i dina meddelanden till Bo.</li>
+        <li>
+          Bo behöver inga känsliga personuppgifter enligt artikel 9 GDPR, t.ex. om hälsa,
+          etniskt ursprung, religion eller politiska åsikter, och vi efterfrågar eller använder
+          dem inte. Skriv därför inte sådana uppgifter, eller uppgifter om din ekonomi, till Bo.
+          Om du ändå gör det behandlas uppgifterna bara för att besvara just det meddelandet,
+          används aldrig för något annat ändamål (t.ex. profilering, rekommendationer eller
+          marknadsföring) och raderas med samtalet. Du kan radera samtalet direkt genom att
+          starta ett nytt.
+        </li>
       </ul>
     </section>
 
