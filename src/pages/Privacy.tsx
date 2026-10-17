@@ -19,6 +19,7 @@ const Privacy = () => (
       <ul className="list-disc pl-6 pt-4 pb-4">
         <li>Konto och profil: namn, användarnamn, e-post, födelsedatum, valfritt telefonnummer, roll, profilbild och verifieringsstatus.</li>
         <li>Användargenererat innehåll: profiler, inlägg, bostadsobjekt, kommentarer, glimtar, hemuppgifter, meddelanden, bilder, videor och bildtexter.</li>
+        <li>Produkttaggar i inlägg: produktnamn, butik eller varumärke, pris, beskrivning, eventuell extern länk, placering i bilden och om varan är såld. Produkttaggar visas offentligt tillsammans med inlägget.</li>
         <li>Privata bostads- och ekonomiuppgifter: hem, lån och bankkontakter som du själv registrerar.</li>
         <li>Valfri grov plats när appen används, valda städer, enhetsuppgifter, säkerhetsloggar och frivilligt registrerad push-token.</li>
         <li>Rapporter, blockeringar och modereringsbeslut som behövs för en trygg tjänst.</li>
@@ -64,6 +65,14 @@ const Privacy = () => (
         Direktmeddelanden är inte end-to-end-krypterade. Behöriga system och ett begränsat
         antal behöriga personer kan därför behandla dem för leverans, säkerhet, rapporter
         och lagkrav. Brokr använder inte tredjepartsspårning och säljer inte personuppgifter.
+      </p>
+      <p>
+        När du kontaktar en säljare via en produkttagg skapas ett vanligt direktmeddelande
+        där produkten bifogas som en länk. Brokr hanterar inga betalningar och behandlar
+        därför inga kort- eller betaluppgifter för köp mellan användare. När du öppnar en
+        extern produktlänk lämnar du Brokr, och den externa webbplatsen ansvarar för sin egen
+        behandling av personuppgifter. Brokr registrerar inte vilka externa produktlänkar du
+        öppnar.
       </p>
     </section>
 
