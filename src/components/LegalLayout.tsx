@@ -5,10 +5,13 @@ import { hasCompleteLegalIdentity, legalIdentity } from "@/lib/legalIdentity";
 export default function LegalLayout({
   title,
   lead,
+  updated = "11 augusti 2026",
   children,
 }: {
   title: string;
   lead: string;
+  /** Revision date shown above the title, e.g. "17 oktober 2026". */
+  updated?: string;
   children: ReactNode;
 }) {
   return (
@@ -24,7 +27,7 @@ export default function LegalLayout({
         </nav>
       </header>
       <article className="legal-article">
-        <p className="legal-updated">Senast uppdaterad 11 augusti 2026</p>
+        <p className="legal-updated">Senast uppdaterad {updated}</p>
         <h1>{title}</h1>
         <p className="legal-lead">{lead}</p>
         {children}
