@@ -4,7 +4,7 @@ import path from "node:path";
 // Amplify serves index.html for unknown paths with a 404 status, which breaks
 // URL checks like Google Play Console's. Emitting a real file per route makes
 // these paths return 200. Keep in sync with the routes in src/App.tsx.
-const routes = ["waitlist", "integritet", "villkor", "support", "Kontakt"];
+const routes = ["waitlist", "integritet", "villkor", "cookies", "support", "Kontakt"];
 
 const dist = path.resolve("dist");
 const indexPath = path.join(dist, "index.html");

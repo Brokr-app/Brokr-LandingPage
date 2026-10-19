@@ -430,6 +430,7 @@ const Index = () => {
         <nav aria-label="Sidfot">
           <a href="/integritet">Integritet</a>
           <a href="/villkor">Villkor</a>
+          <a href="/cookies">Cookies och lagring</a>
           <a href="/support">Kontakt och support</a>
         </nav>
       </footer>
