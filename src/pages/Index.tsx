@@ -1,250 +1,36 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { PRIVACY_POLICY_VERSION } from "@/lib/policyVersion";
-import {
-  ArrowRight,
-  Bookmark,
-  CheckCircle2,
-  ChevronUp,
-  Heart,
-  Link2,
-  Send,
-} from "lucide-react";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
-type SubmitState = "idle" | "submitting" | "success" | "error";
+const APP_URL = "https://www.brokrapp.se";
 
-type FeedCard = {
-  id: string;
-  mediaType: "image" | "video";
-  mediaSrc: string;
-  mediaAlt: string;
-  live?: boolean;
-  agentInitials: string;
-  agentName: string;
-  agentArea: string;
-  title: string;
-  price: string;
-  facts: string;
-};
-
-type FeedState = {
-  liked: boolean;
-  saved: boolean;
-};
-
-type ToastState = {
-  visible: boolean;
-  message: string;
-  mode: "save" | "share";
-};
-
-const feedCards: FeedCard[] = [
+const documents = [
   {
-    id: "grand",
-    mediaType: "image",
-    mediaSrc: "/landing-assets/hero-grand.png",
-    mediaAlt: "Paradvåning vid vattnet",
-    agentInitials: "BM",
-    agentName: "Brokr mäklare",
-    agentArea: "Konceptprofil · Vasastan",
-    title: "Ljus paradvåning vid Vasaparken",
-    price: "18,9 Mkr",
-    facts: "112 m² · 4 rok",
+    to: "/integritet",
+    title: "Integritetspolicy",
+    description: "Vilka personuppgifter vi behandlar, varför och vilka rättigheter du har.",
   },
   {
-    id: "ostermalm",
-    mediaType: "image",
-    mediaSrc: "/landing-assets/hero-ostermalm.png",
-    mediaAlt: "Sekelskiftesvåning med utsikt",
-    agentInitials: "BM",
-    agentName: "Brokr mäklare",
-    agentArea: "Konceptprofil · Östermalm",
-    title: "Sekelskiftesvåning med sjöutsikt",
-    price: "55,0 Mkr",
-    facts: "184 m² · 6 rok",
+    to: "/villkor",
+    title: "Användarvillkor",
+    description: "Reglerna för att använda Brokr, inklusive köp och försäljning mellan användare.",
   },
   {
-    id: "skargarden",
-    mediaType: "video",
-    mediaSrc: "/landing-assets/hero-skargarden.mp4",
-    mediaAlt: "Sjötomt med brygga",
-    agentInitials: "BM",
-    agentName: "Brokr mäklare",
-    agentArea: "Konceptprofil · Skärgården",
-    title: "Sjötomt med egen brygga",
-    price: "14,5 Mkr",
-    facts: "140 m² · 5 rok",
+    to: "/cookies",
+    title: "Cookies och lokal lagring",
+    description: "Vad webbappen sparar i din webbläsare och hur du ändrar dina val.",
+  },
+  {
+    to: "/support",
+    title: "Support",
+    description: "Hjälp med konto, säkerhet, innehåll och tekniska problem.",
   },
 ];
 
-const initialFeedState = feedCards.reduce<Record<string, FeedState>>((acc, card) => {
-  acc[card.id] = { liked: false, saved: false };
-  return acc;
-}, {});
-
-const FeedVideo = ({ src, label }: { src: string; label: string }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return undefined;
-
-    if (!("IntersectionObserver" in window)) {
-      return undefined;
-    }
-
-    const observer = new window.IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0.35 },
-    );
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!("IntersectionObserver" in window)) return;
-
-    if (!video || !isVisible) {
-      video?.pause();
-      return;
-    }
-
-    void video.play();
-  }, [isVisible]);
-
-  return (
-    <video
-      aria-label={label}
-      className="feed-video"
-      loop
-      muted
-      playsInline
-      preload="none"
-      ref={videoRef}
-      src={isVisible ? src : undefined}
-    />
-  );
-};
-
 const Index = () => {
-  const [submitState, setSubmitState] = useState<SubmitState>("idle");
-  const [feedState, setFeedState] = useState<Record<string, FeedState>>(initialFeedState);
-  const [toast, setToast] = useState<ToastState>({
-    visible: false,
-    message: "",
-    mode: "save",
-  });
-  const [scrollHintHidden, setScrollHintHidden] = useState(false);
-
   useEffect(() => {
-    document.title = "Brokr";
+    document.title = "Brokr – villkor, integritet och support";
   }, []);
-
-  useEffect(() => {
-    if (!toast.visible) {
-      return undefined;
-    }
-
-    const timeout = window.setTimeout(() => {
-      setToast((current) => ({ ...current, visible: false }));
-    }, 1700);
-
-    return () => window.clearTimeout(timeout);
-  }, [toast.visible]);
-
-  const showToast = (message: string, mode: "save" | "share") => {
-    setToast({ visible: true, message, mode });
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    const email = String(formData.get("email") ?? "").trim();
-    const website = String(formData.get("website") ?? "");
-
-    if (!email) {
-      setSubmitState("error");
-      return;
-    }
-
-    if (website) {
-      setSubmitState("success");
-      form.reset();
-      return;
-    }
-
-    setSubmitState("submitting");
-
-    try {
-      const formId = import.meta.env.VITE_FORMSPREE_FORM_ID?.trim();
-      if (!formId) throw new Error("Waitlist is not configured");
-      const response = await fetch(`https://formspree.io/f/${formId}`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          privacyAccepted: true,
-          privacyVersion: PRIVACY_POLICY_VERSION,
-          acceptedAt: new Date().toISOString(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Waitlist submission failed");
-      }
-
-      setSubmitState("success");
-      form.reset();
-    } catch {
-      setSubmitState("error");
-    }
-  };
-
-  const toggleLike = (cardId: string) => {
-    setFeedState((current) => ({
-      ...current,
-      [cardId]: {
-        ...current[cardId],
-        liked: !current[cardId].liked,
-      },
-    }));
-  };
-
-  const toggleSave = (cardId: string) => {
-    setFeedState((current) => {
-      const nextSaved = !current[cardId].saved;
-
-      if (nextSaved) {
-        showToast("Sparad i din lista", "save");
-      }
-
-      return {
-        ...current,
-        [cardId]: {
-          ...current[cardId],
-          saved: nextSaved,
-        },
-      };
-    });
-  };
-
-  const copyCardLink = async (card: FeedCard) => {
-    const url = new URL(window.location.href);
-    url.hash = card.id;
-
-    try {
-      await navigator.clipboard.writeText(url.toString());
-      showToast("Länk kopierad", "share");
-    } catch {
-      showToast("Kunde inte kopiera länken", "share");
-    }
-  };
 
   return (
     <main className="landing-shell" id="top">
@@ -432,7 +218,38 @@ const Index = () => {
           <a href="/villkor">Villkor</a>
           <a href="/cookies">Cookies och lagring</a>
           <a href="/support">Kontakt och support</a>
+    <main className="legal-shell">
+      <header className="legal-header">
+        <Link className="brand-mark" to="/" aria-label="Brokr startsida">
+          Brokr<span className="brand-dot">.</span>
+        </Link>
+        <a className="support-button" href={APP_URL}>
+          Öppna Brokr <ArrowRight size={16} strokeWidth={2.1} />
+        </a>
+      </header>
+      <article className="legal-article">
+        <h1>Villkor, integritet och support</h1>
+        <p className="legal-lead">
+          Brokr är ett socialt flöde för bostadsmarknaden. Här hittar du våra policyer och hur
+          du får hjälp. Själva tjänsten finns på <a href={APP_URL}>www.brokrapp.se</a> och i
+          appen.
+        </p>
+        <nav aria-label="Dokument" className="docs-hub">
+          {documents.map((doc) => (
+            <Link className="docs-hub-card" key={doc.to} to={doc.to}>
+              <h2>{doc.title}</h2>
+              <p>{doc.description}</p>
+            </Link>
+          ))}
         </nav>
+      </article>
+      <footer className="landing-footer">
+        <span>
+          © 2026 Brokr — En del av{" "}
+          <a href="https://www.vantir.se/ventures" target="_blank" rel="noopener noreferrer">
+            Vantir Ventures
+          </a>
+        </span>
       </footer>
     </main>
   );

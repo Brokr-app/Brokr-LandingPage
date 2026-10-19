@@ -21,6 +21,7 @@ export default function LegalLayout({
 }: {
   title: string;
   lead: string;
+  /** Revision date shown above the title, e.g. "17 oktober 2026". */
   updated?: string;
   children: ReactNode;
 }) {
