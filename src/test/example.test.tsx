@@ -5,20 +5,45 @@ import Index from "@/pages/Index";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
 import Support from "@/pages/Kontakt";
+import Cookies from "@/pages/Cookies";
 
 describe("landing page", () => {
-  it("renders the rewritten hero copy", () => {
+  it("links the docs hub to every policy page and the app", () => {
     render(
       <MemoryRouter>
         <Index />
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole("link", { name: /^Brokr/ })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Se hem/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Få tidig tillgång/i })).toBeInTheDocument();
-    expect(screen.getByRole("checkbox", { name: /integritetspolicy/i })).toBeRequired();
-    expect(screen.queryByText(/toppmäklare/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Öppna Brokr/i })).toHaveAttribute(
+      "href",
+      "https://www.brokrapp.se",
+    );
+    for (const [name, href] of [
+      [/Integritetspolicy/, "/integritet"],
+      [/Användarvillkor/, "/villkor"],
+      [/Cookies och lokal lagring/, "/cookies"],
+      [/^Support/, "/support"],
+    ] as const) {
+      expect(screen.getByRole("link", { name })).toHaveAttribute("href", href);
+    }
+    expect(screen.queryByRole("textbox", { name: /E-post/i })).not.toBeInTheDocument();
+  });
+
+  it("discloses web storage with categories and how to withdraw consent", () => {
+    render(
+      <MemoryRouter>
+        <Cookies />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("heading", { name: "Cookies och lokal lagring" })).toBeInTheDocument();
+    expect(screen.getByText(/sätter inga\s+cookies/i)).toBeInTheDocument();
+    expect(screen.getByText("@brokr/storage-consent")).toBeInTheDocument();
+    expect(screen.getByText("@brokr/minigames/<användare>/<spel>/best")).toBeInTheDocument();
+    expect(screen.getAllByText("Funktionell")).toHaveLength(1);
+    expect(screen.getByText(/9 kap\. 28 §/)).toBeInTheDocument();
+    expect(screen.getByText(/Senast uppdaterad 17 oktober 2026/)).toBeInTheDocument();
   });
 
   it("publishes the privacy disclosures and support contact", () => {

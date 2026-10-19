@@ -20,3 +20,6 @@ export const TERMS_UPDATED = "16 oktober 2026";
 
 /** Revision of the other legal pages, which are unchanged. */
 export const LEGAL_PAGES_UPDATED = "11 augusti 2026";
+
+/** Revision of the cookie and local storage policy, shown on the cookies page. */
+export const COOKIES_POLICY_UPDATED = "17 oktober 2026";
