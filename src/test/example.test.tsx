@@ -37,6 +37,19 @@ describe("landing page", () => {
     );
   });
 
+  it("discloses how the Bo AI assistant processes data", () => {
+    render(
+      <MemoryRouter>
+        <Privacy />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("heading", { name: "AI-assistenten Bo" })).toBeInTheDocument();
+    expect(screen.getByText(/högst 30 dagar/i)).toBeInTheDocument();
+    expect(screen.getByText(/används inte för att träna modeller/i)).toBeInTheDocument();
+    expect(screen.getByText(/artikel 22 GDPR/i)).toBeInTheDocument();
+  });
+
   it("states that practice guesses are free and nonbinding", () => {
     render(
       <MemoryRouter>
