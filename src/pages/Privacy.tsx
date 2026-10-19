@@ -89,12 +89,11 @@ const Privacy = () => (
         <li>Expo för leverans av pushnotiser och bygg-/distributionsstöd.</li>
         <li>Apple Maps och Google Maps för kart- och platsfunktioner som öppnas i mobilappen.</li>
         <li>
-          OpenStreetMap Foundation för bakgrundskartan i webbversionen. När du öppnar
-          kartan hämtar webbläsaren kartbilder för det synliga området. OpenStreetMap får
-          då din IP-adress och de begärda kartbildsrutorna, som visar ungefär vilket område
-          du tittar på. Vi skickar inte ditt konto eller profiluppgifter till OpenStreetMap.
-          Läs mer i OpenStreetMap Foundations{" "}
-          <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">
+          Google Maps för kartan i webbversionen. När du öppnar en karta laddas Googles
+          karttjänst i webbläsaren. Google tar då emot din IP-adress, information om
+          webbläsaren och det kartområde du visar. Brokr skickar inte dina kontouppgifter,
+          meddelanden eller profiluppgifter till karttjänsten. Läs mer i Googles{" "}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
             integritetspolicy
           </a>
           .

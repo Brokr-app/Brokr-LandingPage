@@ -38,12 +38,13 @@ describe("landing page", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Cookies och lokal lagring" })).toBeInTheDocument();
-    expect(screen.getByText(/sätter inga\s+cookies/i)).toBeInTheDocument();
-    expect(screen.getByText("@brokr/storage-consent")).toBeInTheDocument();
-    expect(screen.getByText("@brokr/minigames/<användare>/<spel>/best")).toBeInTheDocument();
-    expect(screen.getAllByText("Funktionell")).toHaveLength(1);
-    expect(screen.getByText(/9 kap\. 28 §/)).toBeInTheDocument();
-    expect(screen.getByText(/Senast uppdaterad 17 oktober 2026/)).toBeInTheDocument();
+    expect(screen.getByText(/Brokr lägger inte till reklam- eller spårningscookies/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Nödvändig lagring" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Funktionell lagring" })).toBeInTheDocument();
+    expect(screen.getByText(/tar tillbaka ditt godkännande/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Google Maps" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Googles information om cookies" })).toHaveAttribute("href", "https://policies.google.com/technologies/cookies");
+    expect(screen.getByText(/Senast uppdaterad 20 oktober 2026/)).toBeInTheDocument();
   });
 
   it("publishes the privacy disclosures and support contact", () => {
@@ -56,6 +57,8 @@ describe("landing page", () => {
     expect(screen.getByRole("heading", { name: "Integritetspolicy" })).toBeInTheDocument();
     expect(screen.getByText(/inte end-to-end-krypterade/i)).toBeInTheDocument();
     expect(screen.getByText(/Formspree/i)).toBeInTheDocument();
+    expect(screen.getByText(/Google Maps för kartan i webbversionen/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^integritetspolicy$/i })).toHaveAttribute("href", "https://policies.google.com/privacy");
     expect(screen.getByRole("link", { name: "support@brokrapp.se" })).toHaveAttribute(
       "href",
       "mailto:support@brokrapp.se",
@@ -100,7 +103,9 @@ describe("landing page", () => {
     expect(screen.getByText(/ansvarar du själv för att kontrollera att en vara är äkta/i)).toBeInTheDocument();
     expect(screen.getByText(/bedra eller försöka bedra andra användare/i)).toBeInTheDocument();
     expect(screen.getByText(/stänga av konton tillfälligt eller\s+permanent/i)).toBeInTheDocument();
-    expect(screen.getByText(/Senast uppdaterad 16 oktober 2026/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Kartor" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Google Maps och Google Earths ytterligare användarvillkor/ })).toHaveAttribute("href", "https://maps.google.com/help/terms_maps/");
+    expect(screen.getByText(/Senast uppdaterad 20 oktober 2026/)).toBeInTheDocument();
   });
 
   it("discloses how product tags and seller contact are handled", () => {

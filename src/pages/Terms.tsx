@@ -30,6 +30,16 @@ const Terms = () => (
     </section>
 
     <section>
+      <h2>Kartor</h2>
+      <p>
+        Kartorna i webbappen använder Google Maps. När du använder kartorna gäller även{" "}
+        <a href="https://maps.google.com/help/terms_maps/" target="_blank" rel="noopener noreferrer">Google Maps och Google Earths ytterligare användarvillkor</a>
+        {" "}och{" "}
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Googles integritetspolicy</a>.
+      </p>
+    </section>
+
+    <section>
       <h2>Ditt innehåll och ditt ansvar</h2>
       <p>
         Du behåller de rättigheter du har till ditt innehåll men ger Brokr den begränsade

@@ -4,12 +4,12 @@ const Cookies = () => (
   <LegalLayout
     title="Cookies och lokal lagring"
     lead="Här beskriver vi vilken information Brokr sparar i webbläsaren och vilka val du har."
-    updated="19 oktober 2026"
+    updated="20 oktober 2026"
   >
     <section>
       <h2>Cookies och webbläsarlagring</h2>
       <p>
-        Brokr använder inte reklam- eller spårningscookies i webbappen. Webbappen sparar vissa
+        Brokr lägger inte till reklam- eller spårningscookies i webbappen. Webbappen sparar vissa
         uppgifter i webbläsarens lokala lagring för att hantera inloggning och appens funktioner.
         Den lokala lagringen finns på din enhet och används inte för att följa dig på andra
         webbplatser.
@@ -43,6 +43,19 @@ const Cookies = () => (
         Om du väljer endast nödvändig lagring sparas inte dessa uppgifter i webbläsaren. Då används
         standardvärdet för priskartan och minispelsresultat hämtas från servern. Om du senare tar
         tillbaka ditt godkännande raderar vi den funktionella lagring som webbappen känner till.
+      </p>
+    </section>
+
+    <section>
+      <h2>Google Maps</h2>
+      <p>
+        Googles karttjänst laddas när du öppnar en karta. Google tar då emot din IP-adress,
+        information om webbläsaren och det område du visar. Googles tjänst kan använda
+        egna cookies och annan lagring enligt{" "}
+        <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">Googles information om cookies</a>
+        {" "}och{" "}
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">integritetspolicy</a>.
+        Du kan hantera cookies från tredje part i webbläsarens inställningar.
       </p>
     </section>
 
