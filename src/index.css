@@ -773,6 +773,68 @@ button {
   text-decoration: none !important;
 }
 
+.docs-hub {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 42px;
+}
+
+.legal-article .docs-hub-card {
+  display: block;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.legal-article .docs-hub-card:hover,
+.legal-article .docs-hub-card:focus-visible {
+  border-color: var(--accent);
+}
+
+.docs-hub-card h2 {
+  margin-bottom: 6px;
+  font-size: 1.4rem;
+}
+
+.docs-hub-card p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.storage-table-wrap {
+  overflow-x: auto;
+}
+
+.storage-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.storage-table th,
+.storage-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.storage-table th {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.storage-table code {
+  font-size: 0.8rem;
+  word-break: break-all;
+}
+
 .honeypot-field {
   position: absolute;
   left: -9999px;

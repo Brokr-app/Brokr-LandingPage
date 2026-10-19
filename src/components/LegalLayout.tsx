@@ -34,6 +34,7 @@ export default function LegalLayout({
         <nav aria-label="Juridik och support" className="legal-nav">
           <Link to="/integritet">Integritet</Link>
           <Link to="/villkor">Villkor</Link>
+          <Link to="/cookies">Cookies</Link>
           <Link to="/support">Support</Link>
         </nav>
       </header>

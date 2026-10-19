@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import LegalLayout, { ControllerIdentity } from "@/components/LegalLayout";
 import { PRIVACY_POLICY_UPDATED } from "@/lib/policyVersion";
 
@@ -108,6 +109,15 @@ const Privacy = () => (
         extern produktlänk lämnar du Brokr, och den externa webbplatsen ansvarar för sin egen
         behandling av personuppgifter. Brokr registrerar inte vilka externa produktlänkar du
         öppnar.
+      </p>
+    </section>
+
+    <section>
+      <h2>Cookies och lokal lagring</h2>
+      <p>
+        Webbappen sätter inga cookies men sparar ett fåtal uppgifter i webbläsarens lokala
+        lagring. Vad som sparas, varför och hur du ändrar dina val beskrivs i{" "}
+        <Link to="/cookies">Cookies och lokal lagring</Link>.
       </p>
     </section>
 
