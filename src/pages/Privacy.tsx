@@ -1,10 +1,11 @@
 import LegalLayout, { ControllerIdentity } from "@/components/LegalLayout";
+import { PRIVACY_POLICY_UPDATED } from "@/lib/policyVersion";
 
 const Privacy = () => (
   <LegalLayout
     title="Integritetspolicy"
     lead="Här beskriver vi vilka personuppgifter Brokr behandlar, varför de behövs och vilka val du har."
-    updated="17 oktober 2026"
+    updated={PRIVACY_POLICY_UPDATED}
   >
 
     <section>
@@ -15,16 +16,10 @@ const Privacy = () => (
         och uppfylla rättsliga skyldigheter. Grunden är i huvudsak avtal, berättigat
         intresse, samtycke för valfri plats, push och väntelista samt rättslig förpliktelse. Följande uppgifter behandlas:
       </p>
-      <p>
-        För att visa relevant innehåll analyserar vi hur du interagerar med tjänsten
-        (t.ex. vilka bostadsobjekt du visar, sparar eller markerar intresse för) och tar
-        fram en individuellt anpassad rekommendationsprofil av bostadsobjekt. Denna
-        profilering sker med berättigat intresse som grund och påverkar endast i vilken
-        ordning innehåll visas för dig i appen.
-      </p>
       <ul className="list-disc pl-6 pt-4 pb-4">
         <li>Konto och profil: namn, användarnamn, e-post, födelsedatum, valfritt telefonnummer, roll, profilbild och verifieringsstatus.</li>
         <li>Användargenererat innehåll: profiler, inlägg, bostadsobjekt, kommentarer, glimtar, hemuppgifter, meddelanden, bilder, videor och bildtexter.</li>
+        <li>Produkttaggar i inlägg: produktnamn, butik eller varumärke, pris, beskrivning, eventuell extern länk, placering i bilden och om varan är såld. Produkttaggar visas offentligt tillsammans med inlägget.</li>
         <li>Privata bostads- och ekonomiuppgifter: hem, lån och bankkontakter som du själv registrerar.</li>
         <li>Valfri grov plats när appen används, valda städer, enhetsuppgifter, säkerhetsloggar och frivilligt registrerad push-token.</li>
         <li>Rapporter, blockeringar och modereringsbeslut som behövs för en trygg tjänst.</li>
@@ -68,6 +63,24 @@ const Privacy = () => (
     </section>
 
     <section>
+      <h2>Rekommendationer och profilering</h2>
+      <p>
+        För att kunna visa ett relevant flöde analyserar vi hur du använder tjänsten —
+        vilka bostäder du tittar på, sparar, gillar eller väljer bort, samt de områden och
+        bostadstyper du valt. Utifrån detta skapas en avledd profil som styr vilka objekt
+        och inlägg som rankas högst för dig. Grunden är berättigat intresse av att
+        tillhandahålla en fungerande tjänst, samt samtycke för valfri plats.
+      </p>
+      <p>
+        Profileringen påverkar endast vilket innehåll du ser. Den används inte för
+        automatiserat beslutsfattande med rättsliga följder eller liknande betydande
+        inverkan för dig, och inte för annonsering. Du kan när som helst ändra dina
+        områdes- och platsval under Integritet och säkerhet i appen, och du har rätt att
+        invända mot behandlingen enligt nedan. Profilen raderas när kontot raderas.
+      </p>
+    </section>
+
+    <section>
       <h2>Leverantörer och överföringar</h2>
       <p>Brokr använder följande tredjepartsleverantörer för att driva de beskrivna funktionerna:</p>
       <ul className="list-disc pl-6 pt-4 pb-4">
@@ -88,6 +101,14 @@ const Privacy = () => (
         antal behöriga personer kan därför behandla dem för leverans, säkerhet, rapporter
         och lagkrav. Brokr använder inte tredjepartsspårning och säljer inte personuppgifter.
       </p>
+      <p>
+        När du kontaktar en säljare via en produkttagg skapas ett vanligt direktmeddelande
+        där produkten bifogas som en länk. Brokr hanterar inga betalningar och behandlar
+        därför inga kort- eller betaluppgifter för köp mellan användare. När du öppnar en
+        extern produktlänk lämnar du Brokr, och den externa webbplatsen ansvarar för sin egen
+        behandling av personuppgifter. Brokr registrerar inte vilka externa produktlänkar du
+        öppnar.
+      </p>
     </section>
 
     <section>
@@ -99,34 +120,32 @@ const Privacy = () => (
         direkt när verifieringen avgjorts. Du kan radera kontot i appen under Integritet och säkerhet. Kontot inaktiveras
         omedelbart.
       </p>
-      <p>
-         Du kan också begära tillgång eller radering av dina uppgifter genom att kontakta oss på <a href="mailto:support@brokrapp.se">support@brokrapp.se</a>.
-      </p>
     </section>
 
     <section>
       <h2>Dina rättigheter</h2>
-      <p>
-        Enligt dataskyddsförordningen (GDPR) har du rätt att:
-      </p>
+      <p>Enligt dataskyddsförordningen har du rätt att:</p>
       <ul className="list-disc pl-6 pt-4 pb-4">
-        <li>få tillgång till de personuppgifter vi behandlar om dig,</li>
-        <li>få felaktiga uppgifter rättade,</li>
-        <li>få dina uppgifter raderade, inom ramen för vad lag och dokumenterad
-          säkerhets- eller tvisteskyldighet tillåter,</li>
-        <li>begära att behandlingen begränsas i vissa situationer,</li>
-        <li>invända mot behandling som stödjer sig på berättigat intresse,
-          inklusive den profilering som beskrivs ovan,</li>
-        <li>få ut de uppgifter du själv lämnat till oss i ett strukturerat,
-          allmänt använt och maskinläsbart format (dataportabilitet), och</li>
-        <li>när behandlingen bygger på samtycke, när som helst återkalla det
-          samtycket.</li>
+        <li>Få tillgång till de personuppgifter vi behandlar om dig, och en kopia av dem.</li>
+        <li>Få felaktiga uppgifter rättade och ofullständiga uppgifter kompletterade.</li>
+        <li>Få uppgifter raderade, exempelvis när de inte längre behövs för ändamålet.</li>
+        <li>Begära att behandlingen begränsas, till exempel medan en invändning eller en rättelse utreds, om behandlingen är olaglig men du hellre vill begränsa den än få uppgifterna raderade, eller om vi inte längre behöver uppgifterna men du behöver dem för att kunna fastställa, göra gällande eller försvara ett rättsligt anspråk.</li>
+        <li>Invända mot behandling som sker med stöd av berättigat intresse, inklusive den profilering som beskrivs ovan.</li>
+        <li>Få ut de uppgifter du själv lämnat i ett maskinläsbart format och överföra dem till en annan leverantör (dataportabilitet). Rätten gäller uppgifter som behandlas automatiserat med stöd av samtycke eller avtal — den omfattar alltså inte behandling som vilar på berättigat intresse eller rättslig förpliktelse.</li>
+        <li>När som helst återkalla ett samtycke du lämnat, exempelvis för plats, push eller väntelista. Återkallelsen påverkar inte behandling som redan skett.</li>
       </ul>
       <p>
-        Kontakta <a href="mailto:support@brokrapp.se">support@brokrapp.se</a> för
-        att utöva någon av dessa rättigheter. Du har också rätt att lämna in ett
-        klagomål till Integritetsskyddsmyndigheten (IMY), <a href="https://www.imy.se" target="_blank" rel="noreferrer">imy.se</a>, om
-        du anser att vi behandlar dina personuppgifter i strid med gällande rätt.
+        Kontakta oss på <a href="mailto:support@brokrapp.se">support@brokrapp.se</a> för att
+        utöva någon av rättigheterna. Du kan radera kontot direkt i appen under Integritet
+        och säkerhet.
+      </p>
+      <p>
+        Om du anser att vi behandlar dina personuppgifter felaktigt har du rätt att lämna
+        in ett klagomål till tillsynsmyndigheten{" "}
+        <a href="https://www.imy.se" target="_blank" rel="noopener noreferrer">
+          Integritetsskyddsmyndigheten (IMY)
+        </a>
+        .
       </p>
     </section>
   </LegalLayout>

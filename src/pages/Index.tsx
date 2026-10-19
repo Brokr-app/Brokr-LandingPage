@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { PRIVACY_POLICY_VERSION } from "@/lib/policyVersion";
 import {
   ArrowRight,
   Bookmark,
@@ -189,7 +190,7 @@ const Index = () => {
         body: JSON.stringify({
           email,
           privacyAccepted: true,
-          privacyVersion: "2026-08-11",
+          privacyVersion: PRIVACY_POLICY_VERSION,
           acceptedAt: new Date().toISOString(),
         }),
       });
