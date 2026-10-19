@@ -87,7 +87,19 @@ const Privacy = () => (
       <ul className="list-disc pl-6 pt-4 pb-4">
         <li>AWS för autentisering, API, databaser, loggning, köer, privat lagring och automatiserad mediehantering/moderering samt AI-assistenten Bo (Amazon Bedrock, behandling inom EU).</li>
         <li>Expo för leverans av pushnotiser och bygg-/distributionsstöd.</li>
-        <li>Google Maps för kart- och platsfunktioner som användaren aktivt öppnar, samt Google Places för Bos svar om närliggande platser (endast bostadsobjektets position skickas).</li>
+        <li>Apple Maps och Google Maps för kart- och platsfunktioner som öppnas i mobilappen.</li>
+        <li>
+          OpenStreetMap Foundation för bakgrundskartan i webbversionen. När du öppnar
+          kartan hämtar webbläsaren kartbilder för det synliga området. OpenStreetMap får
+          då din IP-adress och de begärda kartbildsrutorna, som visar ungefär vilket område
+          du tittar på. Vi skickar inte ditt konto eller profiluppgifter till OpenStreetMap.
+          Läs mer i OpenStreetMap Foundations{" "}
+          <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">
+            integritetspolicy
+          </a>
+          .
+        </li>
+        <li>Google Places för Bos svar om närliggande platser (endast bostadsobjektets position skickas).</li>
         <li>Formspree för väntelistans formulär.</li>
       </ul>
       <p>

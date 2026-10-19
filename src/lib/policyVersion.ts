@@ -10,10 +10,10 @@
  *
  * Update both fields together whenever the policy text changes substantively.
  */
-export const PRIVACY_POLICY_VERSION = "2026-10-17";
+export const PRIVACY_POLICY_VERSION = "2026-10-19";
 
 /** The same revision, formatted for display in the legal pages. */
-export const PRIVACY_POLICY_UPDATED = "17 oktober 2026";
+export const PRIVACY_POLICY_UPDATED = "19 oktober 2026";
 
 /** Revision of the terms of use, shown on the terms page. */
 export const TERMS_UPDATED = "16 oktober 2026";
